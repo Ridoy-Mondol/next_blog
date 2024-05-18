@@ -52,7 +52,7 @@ const determineReadingTime = (length) => {
 };
 
 
-function page({params}) {
+function Page({params}) {
   const [item, setItem] = useState([]);
   const [postData, setPostData] = useState([]);
   const [showbox, setShowbox] = useState (false);
@@ -105,7 +105,7 @@ function page({params}) {
       }
     
       fetchData();
-    }, []);
+    }, [id]);
     
     useEffect(() => {
       async function fetchData() {
@@ -120,7 +120,7 @@ function page({params}) {
       }
     
       fetchData();
-    }, []);
+    }, [token]);
    
     const headers = new Headers();
     headers.append('Authorization', `Bearer ${token}`);
@@ -272,4 +272,4 @@ function page({params}) {
   )
 }
 
-export default TokenValidation(page);
+export default TokenValidation(Page);

@@ -39,7 +39,7 @@ function Page({params}) {
     }
   
     fetchData();
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     setTitle(item.title);

@@ -45,7 +45,7 @@ useEffect(() => {
   }
 
   fetchData();
-}, []);
+}, [token]);
   return (
     <div className="popular-div pt-0">
        <h1 className="home-heading font-bold popular-head my-4">

@@ -45,7 +45,7 @@ async function getProducts(id) {
   }
 }
 
-function page({params}) {
+function Page({params}) {
     const [postData, setPostData] = useState([]);
     const [item, setItem] = useState([]);
     const [user, setUser] = useState({});
@@ -94,7 +94,7 @@ function page({params}) {
         }
       
         fetchData();
-      }, []);
+      }, [id]);
 
       useEffect(() => {
         async function fetchData() {
@@ -109,7 +109,7 @@ function page({params}) {
         }
       
         fetchData();
-      }, []);
+      }, [token]);
       
       useEffect(() => {
         async function fetchData() {
@@ -265,4 +265,4 @@ return (
   )
 }
 
-export default page
+export default Page

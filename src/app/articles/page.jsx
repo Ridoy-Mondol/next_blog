@@ -10,7 +10,7 @@ import TokenValidation from "@/app/hooks/TokenValidation";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 
-function page() {
+function Page() {
 const [post, setPost] = useState([]);
 const [error, setError] = useState(null);
 const [loading, setLoading] = useState(true);
@@ -66,7 +66,7 @@ useEffect(() => {
   }
 
   fetchData();
-}, []);
+}, [token]);
 
 
 const headers = new Headers();
@@ -270,4 +270,4 @@ async function deleteItem (id, author) {
   )
 }
 
-export default TokenValidation(page);
+export default TokenValidation(Page);

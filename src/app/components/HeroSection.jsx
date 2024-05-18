@@ -48,7 +48,7 @@ useEffect(() => {
   }
 
   fetchData();
-}, []);
+}, [token]);
   const settings = {
     dots: true,
     dotsClass: "slick-dots-custom",

@@ -28,7 +28,7 @@ async function getUser(authorId) {
 }
 
 
-function page() {
+function Page() {
     const [postData, setPostData] = useState([]);
     const [user, setUser] = useState({});
     const [author, setAuthor] = useState('');
@@ -75,7 +75,7 @@ function page() {
         }
       
         fetchData();
-      }, []);
+      }, [token]);
       
       useEffect(() => {
         async function fetchData() {
@@ -228,4 +228,4 @@ return (
   )
 }
 
-export default page
+export default Page

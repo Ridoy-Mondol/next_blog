@@ -45,7 +45,7 @@ useEffect(() => {
   }
 
   fetchData();
-}, []);
+}, [token]);
 
   return (
     <div className="popular-div">
