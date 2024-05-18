@@ -32,9 +32,9 @@ This project was a significant learning experience that included overcoming seve
   - Log in to access personalized features.
 - **Profile Management**:
   - Create a user profile upon signing up.
-  - Update profile information such as username, bio, and profile picture.
+  - Update profile information such as username and profile picture.
 - **Blog Management**:
-  - Create new blog posts with titles, content, and images.
+  - Create new blog posts with titles, content, category and images.
   - Edit or delete your own blog posts.
 - **Reading Blogs**:
   - Browse and read blog posts created by other users.

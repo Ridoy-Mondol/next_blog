@@ -136,7 +136,7 @@ async function deleteItem (id, author) {
             Join Us on a Journey Through Ideas
         </h1>
         <p className='blog-para'>
-        Welcome to our dynamic community of writers and readers. Dive into a world of diverse perspectives, insights, and discussions. Explore topics ranging from technology to arts, and beyond. <span className='hide-mobile'>Share your thoughts, learn something new, and engage in meaningful conversations. Together, let's cultivate knowledge and foster connections through our blog</span>
+        Welcome to our dynamic community of writers and readers. Dive into a world of diverse perspectives, insights, and discussions. Explore topics ranging from technology to arts, and beyond. <span className='hide-mobile'>Share your thoughts, learn something new, and engage in meaningful conversations. Together, let&apos;s cultivate knowledge and foster connections through our blog</span>
         </p>
       </div>
 
