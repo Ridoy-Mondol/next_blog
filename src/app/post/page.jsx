@@ -622,7 +622,7 @@ function Page() {
   });
   const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
 
-  const token = localStorage.getItem('token');
+  const token = (typeof localStorage !== 'undefined') && localStorage.getItem('token');
 
   const handleTitleChange = (event) => {
     const { value } = event.target;
