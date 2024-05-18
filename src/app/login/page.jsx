@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
-import TokenExpired from '../hooks/TokenExpired';
+import { setCookie } from 'cookies-next';
 
 const Login = () => {
     const [error, setError] = useState({});
@@ -42,7 +42,7 @@ const Login = () => {
                     const res_data = await response.json();
                     console.log("res_data", res_data);
                     if (res_data.status === 200) {
-                    localStorage.setItem("token", res_data.token);
+                    setCookie('token2', res_data.token);
                     setError({});
                     window.location.href = '/';
                     } else {
@@ -137,6 +137,6 @@ const Login = () => {
     );
 };
 
-export default TokenExpired(Login);
+export default Login;
 
 

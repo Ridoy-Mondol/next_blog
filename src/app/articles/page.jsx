@@ -6,9 +6,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisH, faPen, faTrash, faEye } from '@fortawesome/free-solid-svg-icons';
-import TokenValidation from "@/app/hooks/TokenValidation";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
+import { getCookie } from 'cookies-next';
 
 function Page() {
 const [post, setPost] = useState([]);
@@ -44,7 +44,7 @@ async function getProducts(token) {
 
 
 
-const token = (typeof localStorage !== 'undefined') && localStorage.getItem('token');
+const token = getCookie('token2');
 
 
 const Showbox = (_id) => {
@@ -270,4 +270,4 @@ async function deleteItem (id, author) {
   )
 }
 
-export default TokenValidation(Page);
+export default Page;

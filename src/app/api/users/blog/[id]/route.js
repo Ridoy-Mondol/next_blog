@@ -29,7 +29,6 @@ export async function GET(request, content) {
 
 
 export async function DELETE(request, content) {
-  // let success = false;
   const id = content.params.id;
   const token = request.headers.get('Authorization')?.split(' ')[1];
   try {
@@ -59,6 +58,7 @@ export async function PATCH(request, content) {
     const data = await request.formData();
     const updates = {};
     const token = request.headers.get('Authorization')?.split(' ')[1];
+    console.log('t',token);
     const decodedToken = jwt.verify(token, secretKey);
     const userId = decodedToken.userId;
     const author = await user.findOne({_id: userId});

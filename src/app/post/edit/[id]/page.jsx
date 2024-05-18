@@ -2,9 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import { Editor, EditorState, RichUtils, ContentState } from 'draft-js';
 import 'draft-js/dist/Draft.css';
-import TokenValidation from "@/app/hooks/TokenValidation";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
+import { getCookie } from 'cookies-next';
 
 async function getProducts(id) {
   try {
@@ -27,7 +27,6 @@ async function getProducts(id) {
 function Page({params}) {
   const [item, setItem] = useState([]);
   const {id} = params;
-  // const token = localStorage.getItem('token');
   useEffect(() => {
     async function fetchData() {
       try {
@@ -118,7 +117,7 @@ function Page({params}) {
       newErrors.blog = 'Blog must be at least 500 characters long.';
     }
     
-    const token = (typeof localStorage !== 'undefined') && localStorage.getItem('token');
+    const token = getCookie('token2');
     const headers = new Headers();
     headers.append('Authorization', `Bearer ${token}`);
     if (Object.keys(newErrors).length > 0) {
@@ -245,4 +244,4 @@ function Page({params}) {
   );
 }
 
-export default TokenValidation(Page);
+export default Page;

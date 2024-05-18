@@ -6,6 +6,8 @@ import Image from "next/image";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { getCookie } from 'cookies-next';
+
 
 async function getProducts(token) {
   const headers = new Headers();
@@ -30,11 +32,10 @@ async function getProducts(token) {
 }
 
 export default function HeroSection() {
-  const [post, setPost] = useState([]);
+const [post, setPost] = useState([]);
 const [error, setError] = useState(null);
 const [loading, setLoading] = useState(true);
-
-const token = (typeof localStorage !== 'undefined') && localStorage.getItem('token');
+const token = getCookie('token2');
 
 useEffect(() => {
   async function fetchData() {

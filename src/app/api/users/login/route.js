@@ -19,13 +19,21 @@ export async function POST(request) {
                 const tokenPayload = {
                     userId: userInfo._id,
                   };
-                const token = jwt.sign(tokenPayload, secretKey);
-                return NextResponse.json({
+                const token = jwt.sign(tokenPayload, secretKey, { expiresIn: '10d'});
+                const response = NextResponse.json({
                     message: "Login successful",
                     status: 200,
                     token: token,
                     body: JSON.stringify({ success: true })
                 });
+                // response.cookies.set({
+                //     name: "token",
+                //     value: token,
+                //     maxAge: 60 * 60 * 24 * 10,
+                //     httpOnly: true,
+                //     path: "/",
+                // });
+                return response;
             } else {
                 return NextResponse.json({
                     message: "Invalid Credentials",

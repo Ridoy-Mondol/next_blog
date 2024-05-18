@@ -601,9 +601,9 @@
 import React, { useState } from 'react';
 import { Editor, EditorState, RichUtils } from 'draft-js';
 import 'draft-js/dist/Draft.css';
-import TokenValidation from "@/app/hooks/TokenValidation";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
+import { getCookie } from 'cookies-next';
 
 function Page() {
   const [isEditorFocused, setIsEditorFocused] = useState(false);
@@ -622,7 +622,7 @@ function Page() {
   });
   const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
 
-  const token = (typeof localStorage !== 'undefined') && localStorage.getItem('token');
+  const token = getCookie('token2');
 
   const handleTitleChange = (event) => {
     const { value } = event.target;
@@ -833,5 +833,5 @@ function Page() {
   );
 }
 
-export default TokenValidation(Page);
+export default Page;
 

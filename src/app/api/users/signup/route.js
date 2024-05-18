@@ -52,7 +52,7 @@ export async function POST (request) {
         const tokenPayload = {
           userId: newuser._id,
         };
-        const token = jwt.sign(tokenPayload, secretKey);
+        const token = jwt.sign(tokenPayload, secretKey, { expiresIn: '10d'});
 
         return NextResponse.json({
             message: "Signup successful",

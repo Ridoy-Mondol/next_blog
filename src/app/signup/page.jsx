@@ -4,8 +4,8 @@ import Link from "next/link"
 import Image from 'next/image';
 import img from "@/app/Images/signup-image.jpg";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUser, faEnvelope, faLock, faUnlockAlt, faImage  } from '@fortawesome/free-solid-svg-icons'
-import TokenExpired from '../hooks/TokenExpired';
+import { faUser, faEnvelope, faLock, faUnlockAlt, faImage  } from '@fortawesome/free-solid-svg-icons';
+import { setCookie } from 'cookies-next';
 
 
 const Registration = () => {
@@ -63,7 +63,7 @@ const Registration = () => {
                 const res_data = await response.json();
                  if (res_data.status === 200) {
                     setRegMsg('');
-                    localStorage.setItem("token", res_data.token);
+                    setCookie('token2', res_data.token);
                     window.location.href = '/';
                 } else {
                     setRegMsg(res_data.message);
@@ -216,4 +216,4 @@ const Registration = () => {
       )
 }
 
-export default TokenExpired(Registration);
+export default Registration;

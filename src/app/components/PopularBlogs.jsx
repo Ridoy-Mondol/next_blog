@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link"
 import Image from "next/image"
 import userImg from "@/app/Images/user_img.jpg"
+import { getCookie } from 'cookies-next';
 
 async function getProducts(token) {
   const headers = new Headers();
@@ -31,7 +32,7 @@ const [post, setPost] = useState([]);
 const [error, setError] = useState(null);
 const [loading, setLoading] = useState(true);
 
-const token = (typeof localStorage !== 'undefined') && localStorage.getItem('token');
+const token = getCookie('token2');
 
 useEffect(() => {
   async function fetchData() {

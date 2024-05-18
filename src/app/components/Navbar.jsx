@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { usePathname } from 'next/navigation'
 import { useRouter } from 'next/navigation'
+import { deleteCookie } from 'cookies-next';
 
 
 function Navbar() {
@@ -23,7 +24,7 @@ function Navbar() {
     setSidebarOpen(true);
   };
   const logout = () => {
-    localStorage.removeItem("token");
+    deleteCookie('token2');
     router.push('/login');
   }
   return (

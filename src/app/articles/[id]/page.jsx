@@ -5,9 +5,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faEllipsisV, faEye, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
 import userImg from "@/app/Images/user_img.jpg";
-import TokenValidation from "@/app/hooks/TokenValidation";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
+import { getCookie } from 'cookies-next';
 
 
 
@@ -61,7 +61,7 @@ function Page({params}) {
   const [author, setAuthor] = useState('');
   const {id} = params;
 
-  const token = (typeof localStorage !== 'undefined') && localStorage.getItem('token');
+  const token = getCookie('token2');
 
   const Showbox = (_id) => {
     setShowbox(!showbox);
@@ -272,4 +272,5 @@ function Page({params}) {
   )
 }
 
-export default TokenValidation(Page);
+// export default TokenValidation(Page);
+export default Page;

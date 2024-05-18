@@ -8,6 +8,7 @@ import { faPen,faPlus } from '@fortawesome/free-solid-svg-icons';
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import userImg from "@/app/Images/user_img.jpg";
+import { getCookie } from 'cookies-next';
 
 
 async function getUser(authorId) {
@@ -39,7 +40,7 @@ function Page() {
     const [postNum, setPostNum] = useState(0);
 
 
-    const token = (typeof localStorage !== 'undefined') && localStorage.getItem('token');
+    const token = getCookie('token2');
 
     async function getAllProducts(token) {
         const headers = new Headers();
@@ -99,7 +100,7 @@ function Page() {
         name && formData.append('name', name);
         img && formData.append('profileImage', img);
 
-        const token = (typeof localStorage !== 'undefined') && localStorage.getItem('token');
+        const token = getCookie('token2');
         const headers = new Headers();
          headers.append('Authorization', `Bearer ${token}`);
         if (name.length > 0 || img) {
