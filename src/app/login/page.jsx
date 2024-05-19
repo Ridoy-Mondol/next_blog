@@ -33,7 +33,7 @@ const Login = () => {
         setError(formError);
         if (Object.keys(formError).length === 0 && isChecked) {
             try {
-                const response = await fetch("http://localhost:3000/api/users/login", {
+                const response = await fetch("/api/users/login", {
                     method: "POST",
                     body: JSON.stringify(value),
                 });

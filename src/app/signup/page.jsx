@@ -55,7 +55,7 @@ const Registration = () => {
         image && formData.append('image', image);
         if (Object.keys(formError).length === 0 && isChecked) {
             try {
-                const response = await fetch("http://localhost:3000/api/users/signup", {
+                const response = await fetch("/api/users/signup", {
                 method: "POST",
                 body: formData,
                 });

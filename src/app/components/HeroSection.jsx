@@ -13,7 +13,7 @@ async function getProducts(token) {
   const headers = new Headers();
   headers.append('Authorization', `Bearer ${token}`);
   try {
-    const response = await fetch('http://localhost:3000/api/users/blog', {
+    const response = await fetch('/api/users/blog', {
       method: 'GET',
       headers: headers,
     });

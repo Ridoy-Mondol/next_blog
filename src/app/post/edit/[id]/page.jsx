@@ -8,7 +8,7 @@ import { getCookie } from 'cookies-next';
 
 async function getProducts(id) {
   try {
-    const response = await fetch(`http://localhost:3000/api/users/blog/${id}`);
+    const response = await fetch(`/api/users/blog/${id}`);
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }

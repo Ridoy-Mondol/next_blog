@@ -13,7 +13,7 @@ import { getCookie } from 'cookies-next';
 
 async function getUser(authorId) {
   try {
-    const response = await fetch(`http://localhost:3000/api/users/profile/${authorId}`);
+    const response = await fetch(`/api/users/profile/${authorId}`);
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
@@ -31,7 +31,7 @@ async function getUser(authorId) {
 
 async function getProducts(id) {
   try {
-    const response = await fetch(`http://localhost:3000/api/users/blog/${id}`);
+    const response = await fetch(`/api/users/blog/${id}`);
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
@@ -64,7 +64,7 @@ function Page({params}) {
         const headers = new Headers();
         headers.append('Authorization', `Bearer ${token}`);
         try {
-          const response = await fetch(`http://localhost:3000/api/users/blog`, {
+          const response = await fetch(`/api/users/blog`, {
             method: 'GET',
             headers: headers,
           });
