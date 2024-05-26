@@ -4,7 +4,8 @@ import 'draft-js/dist/Draft.css';
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import { getCookie } from 'cookies-next';
-import JoditEditor from 'jodit-react';
+import dynamic from 'next/dynamic';
+const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
 
 async function getProducts(id) {
   try {
