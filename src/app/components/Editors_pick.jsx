@@ -3,32 +3,12 @@ import { useState, useEffect } from "react"
 import Image from "next/image"
 import  Link  from "next/link"
 import userImg from "@/app/Images/user_img.jpg"
+import getProducts from '@/app/components/getProducts';
 import { getCookie } from 'cookies-next';
-
-async function getProducts(token) {
-  const headers = new Headers();
-  headers.append('Authorization', `Bearer ${token}`);
-  try {
-    const response = await fetch('/api/users/blog', {
-      method: 'GET',
-      headers: headers,
-    });
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    const data = await response.json();
-    if (data.success) {
-      return data.result;
-    } else {
-      return [];
-    }
-  } catch (error) {
-    throw new Error(`Error fetching products: ${error.message}`);
-  }
-}
+import Footer from "./Footer"
 
 function Editors_pick() {
-  const [post, setPost] = useState([]);
+const [post, setPost] = useState([]);
 const [error, setError] = useState(null);
 const [loading, setLoading] = useState(true);
 
@@ -47,7 +27,11 @@ useEffect(() => {
 
   fetchData();
 }, [token]);
+if (loading) {
+  return <div> </div>
+ }
   return (
+    <>
     <div className="popular-div pt-0">
        <h1 className="home-heading font-bold popular-head my-4">
             Editor’s Pick
@@ -90,6 +74,8 @@ useEffect(() => {
 
 </div> 
 </div>
+ <Footer />
+</>
 )
 }
 

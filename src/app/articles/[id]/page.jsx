@@ -30,23 +30,23 @@ async function getProducts(id) {
 }
 
 const determineReadingTime = (length) => {
-  if (length > 500 && length < 1000) {
+  if (length >= 500 && length < 1000) {
     return 3;
-  } else if (length > 1000 && length < 1500) {
+  } else if (length >= 1000 && length < 1500) {
     return 4;
-  } else if (length > 1500 && length < 2000) {
+  } else if (length >= 1500 && length < 2000) {
     return 5;
-  } else if (length > 2000 && length < 2500) {
+  } else if (length >= 2000 && length < 2500) {
     return 6;
-  } else if (length > 2500 && length < 3000) {
+  } else if (length >= 2500 && length < 3000) {
     return 7;
-  } else if (length > 3000 && length < 3500) {
+  } else if (length >= 3000 && length < 3500) {
     return 8;
-  } else if (length > 3500 && length < 4000) {
+  } else if (length >= 3500 && length < 4000) {
     return 9;
-  } else if (length > 4000 && length < 4500) {
+  } else if (length >= 4000 && length < 4500) {
     return 10;
-  } else if (length > 4500) {
+  } else if (length >= 4500) {
     return 12;
   }
 };
@@ -112,7 +112,6 @@ function Page({params}) {
         try {
           const data = await getAllProducts(token);
           setPostData(data);
-          // setLoading(false);
         } catch (error) {
           // setError('Error fetching products');
           console.error('Error fetching products:', error);
@@ -143,8 +142,26 @@ function Page({params}) {
         console.error('Error deleting post:', error);
     }   
     }
-    const blogLength = item?.blog?.length ?? 'N/A';
+    const stripHtml = (html) => {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      return (doc.body.textContent || "").replace(/\s+/g, '');
+    };
+    const blogLength = stripHtml(item?.blog).length ?? 'N/A';
     const readingTime = determineReadingTime(blogLength);
+
+    if (loading) {
+      return (
+        <div className="spinner-container">
+          <div className="loading-spinner">
+            <div className="spinner-ring"></div>
+            <div className="spinner-ring"></div>
+            <div className="spinner-ring"></div>
+            <div className="spinner-center"></div>
+            <div className="spinner-text">Loading...</div>
+          </div>
+        </div>
+      );
+      }
    
   return (
     <>
@@ -172,9 +189,7 @@ function Page({params}) {
               </div>
               
               <div className=''>
-              <div className='single-para'>
-                {item.blog}
-              </div>
+              <div className='single-para' dangerouslySetInnerHTML={{ __html: item.blog }} />
               <div className='flex justify-between align-items-center pt-12 pb-16 text-xs'>
                  <div className='flex align-items-center space-x-2'>
                     <Image src = {item.user?.profileImage != null ? item.user.profileImage : userImg} alt='' className='single-user-img'
@@ -183,9 +198,6 @@ function Page({params}) {
                     />
                     <div>
                       <p className='font-bold single-author text-capitalize'>{item.user?.name}</p>
-                      <p className='author-profession'>
-                        Student
-                      </p>
                     </div>
                  </div>
 

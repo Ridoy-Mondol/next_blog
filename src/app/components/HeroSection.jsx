@@ -6,30 +6,10 @@ import Image from "next/image";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import getProducts from '@/app/components/getProducts';
 import { getCookie } from 'cookies-next';
+import Navbar from "@/app/components/Navbar";
 
-
-async function getProducts(token) {
-  const headers = new Headers();
-  headers.append('Authorization', `Bearer ${token}`);
-  try {
-    const response = await fetch('/api/users/blog', {
-      method: 'GET',
-      headers: headers,
-    });
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    const data = await response.json();
-    if (data.success) {
-      return data.result;
-    } else {
-      return [];
-    }
-  } catch (error) {
-    throw new Error(`Error fetching products: ${error.message}`);
-  }
-}
 
 export default function HeroSection() {
 const [post, setPost] = useState([]);
@@ -60,11 +40,36 @@ useEffect(() => {
     autoplay: true, 
     autoplaySpeed: 5000,
 };
+
+if (loading) {
+  return (
+    <div className="spinner-container">
+      <div className="loading-spinner">
+        <div className="spinner-ring"></div>
+        <div className="spinner-ring"></div>
+        <div className="spinner-ring"></div>
+        <div className="spinner-center"></div>
+        <div className="spinner-text">Loading...</div>
+      </div>
+    </div>
+  );
+
+}
   
   return (
+  <>
+  <Navbar />
   <Slider {...settings}>   
   {post.slice(0, 5).map((item,index) => {
-    const truncatedIntroPara = item.blog.substring(0, 150) + '...';
+    // 
+    const stripHtmlTags = (htmlString) => {
+      const regex = /(<([^>]+)>)/gi;
+      return htmlString.replace(regex, '');
+    };
+
+    const trimmedAndStrippedBlog = stripHtmlTags(item.blog).trim();
+
+    const truncatedIntroPara = trimmedAndStrippedBlog.substring(0, 150) + '...';
     return (
       <div className="home-container" key={index}>
          <Image src={item.image1} alt="" className="home-bg"
@@ -83,9 +88,7 @@ useEffect(() => {
              <div className="hero-date mr-3">
                {item.date.split('T')[0]} <FontAwesomeIcon icon={faMinus} className="ml-1"/>
               </div>
-              <div>
-                {truncatedIntroPara}
-              </div>
+              <div dangerouslySetInnerHTML={{__html: truncatedIntroPara}} /> 
               </div>
           </div>             
         </div>
@@ -93,5 +96,6 @@ useEffect(() => {
       )
     })} 
     </Slider>
+    </>
   );
 }

@@ -42,9 +42,9 @@ const Login = () => {
                     const res_data = await response.json();
                     console.log("res_data", res_data);
                     if (res_data.status === 200) {
-                    setCookie('token2', res_data.token);
-                    setError({});
-                    window.location.href = '/';
+                        setCookie('token2', res_data.token, { maxAge: 10 * 24 * 60 * 60 });
+                        setError({});
+                        window.location.href = '/';
                     } else {
                         setError({ invalid: res_data.message});
                     }

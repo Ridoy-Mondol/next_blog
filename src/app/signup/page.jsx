@@ -63,7 +63,7 @@ const Registration = () => {
                 const res_data = await response.json();
                  if (res_data.status === 200) {
                     setRegMsg('');
-                    setCookie('token2', res_data.token);
+                    setCookie('token2', res_data.token, { maxAge: 10 * 24 * 60 * 60 });
                     window.location.href = '/';
                 } else {
                     setRegMsg(res_data.message);

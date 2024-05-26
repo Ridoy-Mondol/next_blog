@@ -25,9 +25,15 @@ const Footer = () => {
         <div className="flex flex-col gap-4">
           <h3 className="text-lg font-bold text-white">Connections</h3>
           <div className="flex gap-4">
+            <Link target="_blank" href="https://www.facebook.com/profile.php?id=100015131225530">
             <FontAwesomeIcon icon={faFacebook} className="text-[#E5E5E5] hover:text-[#F86F03]" />
+            </Link>
+            <Link target="_blank" href="https://www.linkedin.com/in/md-ridoy-mondol-885555297/">
             <FontAwesomeIcon icon={faLinkedin} className="text-[#E5E5E5] hover:text-[#F86F03]" />
+            </Link>
+            <Link target="_blank" href="https://www.linkedin.com/in/md-ridoy-mondol-885555297/">
             <FontAwesomeIcon icon={faInstagram} className="text-[#E5E5E5] hover:text-[#F86F03]" />
+            </Link>
           </div>
         </div>
       </div>

@@ -1,10 +1,10 @@
 "use client"
-import React, { useState, useEffect } from 'react';
-import { Editor, EditorState, RichUtils, ContentState } from 'draft-js';
+import React, { useState, useEffect, useRef, useMemo  } from 'react';
 import 'draft-js/dist/Draft.css';
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import { getCookie } from 'cookies-next';
+import JoditEditor from 'jodit-react';
 
 async function getProducts(id) {
   try {
@@ -26,12 +26,15 @@ async function getProducts(id) {
 
 function Page({params}) {
   const [item, setItem] = useState([]);
+  const [loading, setLoading] = useState(true);
   const {id} = params;
+  const editor = useRef(null);
   useEffect(() => {
     async function fetchData() {
       try {
         const data = await getProducts(id);
         setItem(data);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching products:', error);
       }
@@ -44,19 +47,8 @@ function Page({params}) {
     setTitle(item.title);
     setBlog(item.blog || '');
     setCategory(item.category || '');
-    
-    if (item && item.blog) {
-      try {
-        setEditorState(EditorState.createWithContent(ContentState.createFromText(item.blog)));
-      } catch (error) {
-        console.error('Error setting editor content:', error);
-      }
-    } else {
-      setEditorState(EditorState.createEmpty());
-    }
   }, [item]);
 
-  const [isEditorFocused, setIsEditorFocused] = useState(false);
   const [title, setTitle] = useState('');
   const [blog, setBlog] = useState('');
   const [category, setCategory] = useState('');
@@ -70,7 +62,6 @@ function Page({params}) {
     category: '',
     image: '',
   });
-  const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
 
 
   const handleTitleChange = (event) => {
@@ -78,17 +69,10 @@ function Page({params}) {
     setTitle(value);
   };
 
-  const handleBlogChange = (editorState) => {
-    setEditorState(editorState);
-    const content = editorState.getCurrentContent();
-    setBlog(content.getPlainText());
+  const handleBlogChange = (value) => {
+    setBlog(value);
   };
   
-
-  const handleStyleChange = (style) => {
-    setEditorState(RichUtils.toggleInlineStyle(editorState, style));
-  };
-
   const handleCategoryChange = (event) => {
     const { value } = event.target;
     setCategory(value);
@@ -99,7 +83,12 @@ function Page({params}) {
     const file = event.target.files[0];
     setImage1(file);
   };
+ 
 
+  const stripHtml = (html) => {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    return (doc.body.textContent || "").replace(/\s+/g, '');
+  };
 
   
   const handleSubmit = async () => {
@@ -109,11 +98,12 @@ function Page({params}) {
     blog && formData.append('blog', blog);
     category && formData.append('category', category);
     image1 && formData.append('image1', image1);
-
-    if (title.length > 0 && (title.length <25 || title.length > 60) ) {
+    
+    const trimmedTitle = title.replace(/\s+/g, '');
+    if (trimmedTitle.length > 0 && (trimmedTitle.length <25 || trimmedTitle.length > 60) ) {
       newErrors.title = 'Title must be between 25 and 60 characters';
     }
-    if (blog.length > 0 && blog.length < 500) {
+    if (stripHtml(blog).length > 0 && stripHtml(blog).length < 500) {
       newErrors.blog = 'Blog must be at least 500 characters long.';
     }
     
@@ -150,6 +140,29 @@ function Page({params}) {
     setEditorState(EditorState.createEmpty());
   };
 
+  const config = useMemo(() => ({
+    readonly: false,
+    placeholder: '',
+    toolbar: true,
+    uploader: {
+      insertImageAsBase64URI: true
+    }
+  }), []);
+
+  if (loading) {
+    return (
+      <div className="spinner-container">
+        <div className="loading-spinner">
+          <div className="spinner-ring"></div>
+          <div className="spinner-ring"></div>
+          <div className="spinner-ring"></div>
+          <div className="spinner-center"></div>
+          <div className="spinner-text">Loading...</div>
+        </div>
+      </div>
+    );
+    }
+
   return (
     <>
     <Navbar />
@@ -166,25 +179,17 @@ function Page({params}) {
 
      
         <div className='input-div'>
-          <h3 className='input-title font-bold'>
+          <h3 className='input-title font-bold mb-3'>
             Write your blog in minimum 500 characters
           </h3>
-          <div className="editor-toolbar my-3">
-            <button onClick={() => handleStyleChange('BOLD')}><b>B</b></button>
-            <button onClick={() => handleStyleChange('ITALIC')}><i>I</i></button>
-            <button onClick={() => handleStyleChange('UNDERLINE')}><u>U</u></button>
-          </div>
-          <div
-            className={isEditorFocused ? "blog-input blog-input-2 my-3 focused" : "blog-input blog-input-2 my-3"}
-            onFocus={() => setIsEditorFocused(true)}
-            onBlur={() => setIsEditorFocused(false)}>
-            <Editor
-              editorState={editorState}
-              onChange={handleBlogChange}
-              placeholder="Blog"
-              editorClassName="blog-input blog-input-2 my-3 editor-input"
+            <JoditEditor
+			      ref={editor}
+			      value={blog}
+			      config={config}
+			      tabIndex={1}  
+			      onChange={handleBlogChange}
+            className='jodit'
             />
-          </div>
           {errors.blog && <span className="error-message">{errors.blog}</span>}
         </div>
       

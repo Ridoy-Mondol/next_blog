@@ -55,6 +55,9 @@ function Page({params}) {
     const [showImg, setShowImg] = useState(false);
     const [name, setName] = useState('');
     const [img, setImg] = useState("");
+    const [loading, setLoading] = useState(true);
+    const [loading2, setLoading2] = useState(true);
+    const [loading3, setLoading3] = useState(true);
 
     const {id} = params;
 
@@ -88,7 +91,7 @@ function Page({params}) {
           try {
             const data = await getProducts(id);
             setItem(data);
-            // setLoading(false);
+            // setLoading3(false);
           } catch (error) {
             console.error('Error fetching products:', error);
           }
@@ -102,7 +105,7 @@ function Page({params}) {
           try {
             const data = await getAllProducts(token);
             setPostData(data);
-            // setLoading(false);
+            setLoading(false);
           } catch (error) {
             // setError('Error fetching products');
             console.error('Error fetching products:', error);
@@ -117,6 +120,7 @@ function Page({params}) {
           try {
             const data = await getUser(item.user?.author);
             setUser(data);
+            setLoading2(false);
           } catch (error) {
             console.error('Error fetching user:', error);
           }
@@ -127,6 +131,7 @@ function Page({params}) {
 
       useEffect(() => {
         setName(user.name || '');
+        setLoading3(false);
       }, [user]);
 
 
@@ -153,7 +158,6 @@ function Page({params}) {
 
 
           if (res.status === 200 && res2.status === 200) {
-            // window.location.href = "/profile/" + ;
             window.location.reload();
           } else {
             console.error('Error updating name:', res.status, res.statusText);
@@ -164,7 +168,19 @@ function Page({params}) {
       }
       }
 
-
+      if (loading || loading2 || loading3) {
+        return (
+          <div className="spinner-container">
+            <div className="loading-spinner">
+              <div className="spinner-ring"></div>
+              <div className="spinner-ring"></div>
+              <div className="spinner-ring"></div>
+              <div className="spinner-center"></div>
+              <div className="spinner-text">Loading...</div>
+            </div>
+          </div>
+        );
+        }
 return (
 <>
 <Navbar />

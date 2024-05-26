@@ -37,6 +37,8 @@ function Page() {
     const [showImg, setShowImg] = useState(false);
     const [name, setName] = useState('');
     const [img, setImg] = useState("");
+    const [loading, setLoading] = useState(true);
+    const [loading2, setLoading2] = useState(true);
     const [postNum, setPostNum] = useState(0);
 
 
@@ -70,6 +72,7 @@ function Page() {
           try {
             const data = await getAllProducts(token);
             setPostData(data);
+            setLoading(false);
           } catch (error) {
             console.error('Error fetching products:', error);
           }
@@ -83,6 +86,7 @@ function Page() {
           try {
             const data = await getUser(author);
             setUser(data);
+            setLoading2(false);
           } catch (error) {
             console.error('Error fetching user:', error);
           }
@@ -128,6 +132,19 @@ function Page() {
       }
       }
 
+      if (loading || loading2) {
+        return (
+          <div className="spinner-container">
+            <div className="loading-spinner">
+              <div className="spinner-ring"></div>
+              <div className="spinner-ring"></div>
+              <div className="spinner-ring"></div>
+              <div className="spinner-center"></div>
+              <div className="spinner-text">Loading...</div>
+            </div>
+          </div>
+        );
+        }
 
 return (
 <>

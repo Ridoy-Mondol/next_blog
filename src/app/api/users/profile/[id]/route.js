@@ -23,64 +23,68 @@ export async function GET(request, content) {
     return NextResponse.json({ result, success });
   }
 
-
-  export async function PATCH(request, content) {
-    let success = false; 
+  export async function PATCH(request) {
+    let success = false;
   
     try {
       const data = await request.formData();
       const updates = {};
       const token = request.headers.get('Authorization')?.split(' ')[1];
+      const decodedToken = jwt.verify(token, secretKey);
+      const userId = decodedToken.userId;
+  
       if (data.has('name')) {
         updates.name = data.get('name');
         success = true;
       }
+  
       if (data.has('password')) {
         const password = data.get('password');
         const saltRound = 10;
         const hashPassword = await bcrypt.hash(password, saltRound);
         updates.password = hashPassword;
-        success = true; 
+        success = true;
       }
+  
       if (data.has('profileImage')) {
         const image1File = data.get('profileImage');
         const buffer1 = await image1File.arrayBuffer();
         const image1 = Buffer.from(new Uint8Array(buffer1));
-        const imagemimetype1 = image1File.type.split('/').at(-1);
-        const fileName1 = image1File.name;
-        const publicpath1 = `public/uploads/${fileName1}`;
-        await fs.writeFile(publicpath1, image1);
-        const cloudinaryResponse1 = await uploadFile(publicpath1, fileName1, imagemimetype1);
-        const imageUrl1 = cloudinaryResponse1.secure_url; 
+        const imageUrl1 = await uploadToCloudinary(image1, image1File.name, image1File.type);
         updates.profileImage = imageUrl1;
-        success = true; 
-        await fs.unlink(publicpath1);
+        success = true;
       }
   
       if (success) {
         await connectDB();
-        const decodedToken = jwt.verify(token, secretKey);
-        const userId = decodedToken.userId;
-        await signupUser.updateOne({ _id: userId}, { $set: updates });
-        return NextResponse.json({ success });
+        await signupUser.updateOne({ _id: userId }, { $set: updates });
+        return new NextResponse(JSON.stringify({ success }), { status: 200 });
+      } else {
+        return new NextResponse(JSON.stringify({ success: false, message: 'No valid fields to update' }), { status: 400 });
       }
     } catch (error) {
       console.error('Error updating user:', error);
-      return NextResponse.json({ success: false });
-    } 
+      return new NextResponse(JSON.stringify({ success: false, error: error.message }), { status: 500 });
+    }
   }
   
+  function uploadToCloudinary(buffer, fileName, mimeType) {
+    return new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        {
+          folder: "blog",
+          filename_override: fileName,
+          format: mimeType.split('/').pop(),
+        },
+        (error, result) => {
+          if (error) {
+            console.error('Error uploading file to Cloudinary:', error);
+            return reject(error);
+          }
+          resolve(result.secure_url);
+        }
+      );
   
-  async function uploadFile(filepath, fileName, imagemimetype) {
-    try {
-      const response = await cloudinary.uploader.upload(filepath, {
-        folder: "blog",
-        filename_override: fileName,
-        format: imagemimetype,
-      });
-      return response;
-    } catch (error) {
-      console.error('Error uploading file to Cloudinary:', error);
-      throw error;
-    }
+      stream.end(buffer);
+    });
   }

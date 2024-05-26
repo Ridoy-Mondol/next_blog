@@ -3,83 +3,81 @@ import connectDB from '@/db/connection';
 import BlogPost from '@/models/blogModel';
 import user from "@/models/signupModel";
 import cloudinary from '@/utils/cloudinary';
-import fs from 'fs/promises';
 import { DateTime } from 'luxon';
 import jwt from 'jsonwebtoken';
 
 const secretKey = process.env.JWT_SECRET_KEY;
 
-
 export async function POST(request) {
-  const data = await request.formData();
-  const title = data.get('title');
-  const blog = data.get('blog');
-  const category = data.get('category');
-  const image1File = data.get('image1');
-
-  const buffer1 = await image1File.arrayBuffer();
-
-  const image1 = Buffer.from(new Uint8Array(buffer1));
-
-
-  const imagemimetype1 = image1File.type.split('/').at(-1);
-
-  const fileName1 = image1File.name;
-
-  const publicpath1 = `public/uploads/${fileName1}`;
-  await fs.writeFile(publicpath1, image1);
-
-  const cloudinaryResponse1 = await uploadFile(publicpath1, fileName1, imagemimetype1);
-  const imageUrl1 = cloudinaryResponse1.secure_url;
-
-  const token = request.headers.get('Authorization')?.split(' ')[1];
   try {
+    const data = await request.formData();
+    const title = data.get('title');
+    const blog = data.get('blog');
+    const category = data.get('category');
+    const image1File = data.get('image1');
+
+    const buffer1 = await image1File.arrayBuffer();
+    const image1 = Buffer.from(new Uint8Array(buffer1));
+
+    const imageUrl1 = await uploadToCloudinary(image1, image1File.name, image1File.type);
+
+    const token = request.headers.get('Authorization')?.split(' ')[1];
     await connectDB();
+
     const decodedToken = jwt.verify(token, secretKey);
     const userId = decodedToken.userId;
     const author = await user.findOne({_id: userId});
+
     const newPost = new BlogPost({
-      title: title,
-      blog: blog,
-      category: category,
+      title,
+      blog,
+      category,
       image1: imageUrl1,
       user: {
         name: author.name,
-        profileImage: author.
-        profileImage ? author.profileImage : null,
+        profileImage: author.profileImage ? author.profileImage : null,
         author: author._id,
       },
-      date : DateTime.now().toLocaleString({ month: '2-digit', day: '2-digit', year: '2-digit' }),
-    }); 
-    await newPost.save();
-    return new NextResponse({
-      status: 200,
-      body: JSON.stringify({ success: true })
+      date: DateTime.now().toLocaleString({ month: '2-digit', day: '2-digit', year: '2-digit' }),
     });
+
+    await newPost.save();
+    return new NextResponse(
+      JSON.stringify({ success: true }),
+      { status: 200 }
+    );
   } catch (error) {
     console.error('Error saving document:', error);
-    return new NextResponse({
-      status: 500,
-      body: JSON.stringify({ success: false, error: error.message })
-    });
-  } finally {
-    await fs.unlink(publicpath1);
+    return new NextResponse(
+      JSON.stringify({ success: false, error: error.message }),
+      { status: 500 }
+    );
   }
 }
 
-async function uploadFile(filepath, fileName, imagemimetype) {
-  try {
-    const response = await cloudinary.uploader.upload(filepath, {
-      folder: "blog",
-      filename_override: fileName,
-      format: imagemimetype,
-    });
-    return response;
-  } catch (error) {
-    console.error('Error uploading file to Cloudinary:', error);
-    throw error;
-  }
+function uploadToCloudinary(buffer, fileName, mimeType) {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      {
+        folder: "blog",
+        filename_override: fileName,
+        format: mimeType.split('/').pop(),
+      },
+      (error, result) => {
+        if (error) {
+          console.error('Error uploading file to Cloudinary:', error);
+          return reject(error);
+        }
+        resolve(result.secure_url);
+      }
+    );
+
+    stream.end(buffer);
+  });
 }
+
+
+
 
 
 export async function GET(request) {

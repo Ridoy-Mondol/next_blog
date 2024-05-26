@@ -3,29 +3,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link"
 import Image from "next/image"
 import userImg from "@/app/Images/user_img.jpg"
+import getProducts from '@/app/components/getProducts';
 import { getCookie } from 'cookies-next';
-
-async function getProducts(token) {
-  const headers = new Headers();
-  headers.append('Authorization', `Bearer ${token}`);
-  try {
-    const response = await fetch('/api/users/blog', {
-      method: 'GET',
-      headers: headers,
-    });
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    const data = await response.json();
-    if (data.success) {
-      return data.result;
-    } else {
-      return [];
-    }
-  } catch (error) {
-    throw new Error(`Error fetching products: ${error.message}`);
-  }
-}
 
 function PopularBlogs() {
 const [post, setPost] = useState([]);
@@ -47,6 +26,10 @@ useEffect(() => {
 
   fetchData();
 }, [token]);
+
+if (loading) {
+  return <div></div>
+ }
 
   return (
     <div className="popular-div">

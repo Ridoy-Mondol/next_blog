@@ -90,7 +90,6 @@ async function deleteItem (id, author) {
 }
 
 
-
   const itemsPerPage = 6;
   const [currentPage, setCurrentPage] = useState(1);
   const [currentCategory, setCurrentCategory] = useState('All');
@@ -125,7 +124,19 @@ async function deleteItem (id, author) {
   }
 
 
-
+  if (loading) {
+    return (
+      <div className="spinner-container">
+        <div className="loading-spinner">
+          <div className="spinner-ring"></div>
+          <div className="spinner-ring"></div>
+          <div className="spinner-ring"></div>
+          <div className="spinner-center"></div>
+          <div className="spinner-text">Loading...</div>
+        </div>
+      </div>
+    );
+    }
   return (
     <>
     <Navbar />
@@ -177,10 +188,18 @@ async function deleteItem (id, author) {
         </li>
       </div>
       <div className=''>
-         {
-          currentItems.map((val,index) => {
-            const truncatedIntroPara = val.blog.substring(0, 350) + '...';
-            const truncatedIntroPara2 = val.blog.substring(0, 120) + '...';
+         { currentItems.map((val) => {
+        const stripHtmlTags = (htmlString) => {
+         const regex = /(<([^>]+)>)/gi;
+         return htmlString.replace(regex, '');
+       };
+
+       const trimmedAndStrippedBlog = stripHtmlTags(val.blog).trim();
+
+       const truncatedIntroPara = trimmedAndStrippedBlog.substring(0, 350) + '...';
+       const truncatedIntroPara2 = trimmedAndStrippedBlog.substring(0, 120) + '...';
+
+
             return (
               <div className='flex blog-div my-8' key={val._id}>
                 <div className='blog-img-div'>
@@ -234,12 +253,9 @@ async function deleteItem (id, author) {
                     </div>
                  </div>
                  <p className='blog-para-2 mb-4'>
-                  <span className='hide-mobile'>
-                  {truncatedIntroPara}
-                  </span>
-                  <span className='hide-desktop'>
-                  {truncatedIntroPara2}
-                  </span>
+                  <span className='hide-mobile'
+                  dangerouslySetInnerHTML={{ __html: truncatedIntroPara }} />
+                  <span className='hide-desktop' dangerouslySetInnerHTML={{ __html: truncatedIntroPara2 }}/>
                  </p>
                  <Link href={{pathname: `/articles/${val._id}`, }} className='blog-btn'>
                   Read full article...

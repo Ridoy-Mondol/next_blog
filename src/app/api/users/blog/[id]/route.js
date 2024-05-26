@@ -3,7 +3,6 @@ import connectDB from '@/db/connection';
 import BlogPost from '@/models/blogModel';
 import user from "@/models/signupModel";
 import cloudinary from '@/utils/cloudinary';
-import fs from 'fs/promises';
 import { DateTime } from 'luxon';
 import jwt from 'jsonwebtoken';
 
@@ -45,23 +44,19 @@ export async function DELETE(request, content) {
 }
 
 
-
-
-
 export async function PATCH(request, content) {
   let success = false;
   const id = content.params.id; 
   const ids = id.split(',').map(id => id);
 
-
   try {
     const data = await request.formData();
     const updates = {};
     const token = request.headers.get('Authorization')?.split(' ')[1];
-    console.log('t',token);
     const decodedToken = jwt.verify(token, secretKey);
     const userId = decodedToken.userId;
     const author = await user.findOne({_id: userId});
+
     if (data.has('title')) {
       updates.title = data.get('title');
       success = true;
@@ -78,15 +73,9 @@ export async function PATCH(request, content) {
       const image1File = data.get('image1');
       const buffer1 = await image1File.arrayBuffer();
       const image1 = Buffer.from(new Uint8Array(buffer1));
-      const imagemimetype1 = image1File.type.split('/').at(-1);
-      const fileName1 = image1File.name;
-      const publicpath1 = `public/uploads/${fileName1}`;
-      await fs.writeFile(publicpath1, image1);
-      const cloudinaryResponse1 = await uploadFile(publicpath1, fileName1, imagemimetype1);
-      const imageUrl1 = cloudinaryResponse1.secure_url; 
+      const imageUrl1 = await uploadToCloudinary(image1, image1File.name, image1File.type);
       updates.image1 = imageUrl1;
       success = true; 
-      await fs.unlink(publicpath1);
     }
 
     if (author) {
@@ -102,29 +91,35 @@ export async function PATCH(request, content) {
 
     if (success) {
       await connectDB();
-      const decodedToken = jwt.verify(token, secretKey);
-      const userId = decodedToken.userId;
       await BlogPost.updateMany({ _id: { $in: ids }, 'user.author': userId }, { $set: updates });
       return NextResponse.json({ success });
+    } else {
+      return NextResponse.json({ success: false, message: 'No valid fields to update' });
     }
   } catch (error) {
     console.error('Error updating post:', error);
-    return NextResponse.json({ success: false });
+    return NextResponse.json({ success: false, error: error.message });
   } 
 }
 
+function uploadToCloudinary(buffer, fileName, mimeType) {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      {
+        folder: "blog",
+        filename_override: fileName,
+        format: mimeType.split('/').pop(),
+      },
+      (error, result) => {
+        if (error) {
+          console.error('Error uploading file to Cloudinary:', error);
+          return reject(error);
+        }
+        resolve(result.secure_url);
+      }
+    );
 
-async function uploadFile(filepath, fileName, imagemimetype) {
-  try {
-    const response = await cloudinary.uploader.upload(filepath, {
-      folder: "blog",
-      filename_override: fileName,
-      format: imagemimetype,
-    });
-    return response;
-  } catch (error) {
-    console.error('Error uploading file to Cloudinary:', error);
-    throw error;
-  }
+    stream.end(buffer);
+  });
 }
 

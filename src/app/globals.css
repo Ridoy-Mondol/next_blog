@@ -8,6 +8,74 @@ body, .home-page {
   overflow-x: hidden!important;
 }
 
+/* loading spinner */
+.spinner-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; 
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.9); 
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000; 
+}
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.spinner-ring {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  animation: pulse 1.5s infinite cubic-bezier(0.66, 0, 0, 1);
+  border-top-color: #4b9cdb;
+}
+
+.spinner-ring:nth-child(2) {
+  animation-delay: -0.5s;
+}
+
+.spinner-ring:nth-child(3) {
+  animation-delay: -1s;
+}
+
+.spinner-center {
+  background-color: #4b9cdb;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.spinner-text {
+  margin-top: 10px;
+  font-size: 1.2em;
+  color: #4b9cdb;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0.8);
+  }
+}
+
+
 
 /* registration */
 .register-div {
@@ -305,6 +373,9 @@ form{
 .single-para {
   padding-bottom: 2rem;
   border-bottom: 2px solid #495057;
+  word-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
 }
 .single-user-img {
   width: 2.5rem;
@@ -414,6 +485,9 @@ form{
 .blog-para-2 {
   width: 100%;
   color: #232536;
+  word-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
 }
 .blog-btn {
   background-color: #FF5959;
@@ -513,12 +587,6 @@ form{
   height: auto;
   padding: 5rem 0;
 }
-.create-heading {
-  color: #0C0D0E;
-  font-size: 1.7rem;
-  padding-left: 14.4%;
-  margin-bottom: 2rem;
-}
 .input-div {
   background-color: #FFFFFF;
   padding: 1.5rem 1rem;
@@ -536,11 +604,6 @@ form{
   outline: 1px solid #3B4045;
   padding-left: 0.5rem;
 }
-.blog-input-2 {
-  outline: 1px solid #3B4045;
-  height: auto;
-  padding: 0.5rem;
-}
 #blogImage1 {
   height: auto;
   padding: 0;
@@ -548,8 +611,8 @@ form{
 .blog-input:focus {
   outline: 2px solid #007bff;
 }
-.focused {
-  outline: 2px solid #007bff;
+.jodit {
+  height: auto !important;
 }
 .input-btn {
   background-color: #007bff;
@@ -568,32 +631,7 @@ form{
 .error-message {
   color: red;
 }
-.editor-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 1rem;
-}
-.bold {
-  font-weight: bold;
-}
-.italic {
-  font-style: italic;
-}
-.underline {
-  text-decoration: underline;
-}
-.editor-toolbar button {
-  width: 2rem;
-  height: 2rem;
-  cursor: pointer;
-  border: none;
-  background-color: #f0f0f0;
-  border-radius: 5px;
-}
-.editor-toolbar button:hover {
-  background-color: #e0e0e0;
-}
+
 
 /* user-profile */
 .profile-div {
@@ -837,12 +875,12 @@ form{
   .sidebar li {
     list-style: none;
     padding-left: 5%;
-    margin-top: 5%;
+    margin-top: 10%;
   } 
 
   /* herosection */
  .home-container {
-   height: 60vh;
+   height: 55vh;
  }
  .home-text {
    width: 90vw;
@@ -892,6 +930,11 @@ form{
     padding: 0 5vw;
     flex-wrap: wrap;
     font-size: 1rem;
+    word-wrap: break-word!important;
+    overflow-wrap: break-word!important;
+    white-space: normal!important;
+    overflow-x: hidden;
+    height: auto;
   }
   .single-para {
     margin: 0;
@@ -924,7 +967,13 @@ form{
 
   /* article */
   .blog-heading {
-    font-size: 2rem;
+    font-size: 1.75rem;
+  }
+  .article-img {
+    height: 65vh;
+  }
+  .y {
+    height: 65vh;
   }
   .blog-head {
     flex-direction: column;
@@ -961,8 +1010,7 @@ form{
   .editpart {
     top: 5vh;
     transform: translateX(0vw);
-    width: auto;
-    padding-right: 15vw;
+    width: 12rem;
   }
   .pagination {
     margin-top: 2rem;
@@ -998,7 +1046,7 @@ form{
 }
 .profile-card {
   width: 90vw;
-  height: 70vh;
+  height: 60vh;
 }
 .profile-parent {
   width: 90vw;
@@ -1015,7 +1063,7 @@ form{
 }
 .update-name {
   width: 90%;
-  top: 60%;
+  top: 24%;
 }
 .update-name h1 {
    width: 90%;
@@ -1132,6 +1180,12 @@ form{
   }
 
   /* single-article */
+  .article-img {
+    height: 70vh;
+  }
+  .y {
+    height: 70vh;
+  }
   .single-blog {
     padding: 0 5vw;
   }
@@ -1156,11 +1210,12 @@ form{
     font-size: 2rem;
   }
   .blog-img-div {
-    width: 100%!important;
+    width: 80%!important;
     height: 15.5rem;
   }
   .blog-img {
     height: 100%;
+    width: 100%!important;
   }
   .blog-para-div {
     width: 100%;
@@ -1174,9 +1229,8 @@ form{
   }
   .editpart {
     top: 5vh;
-    transform: translateX(13vw);
-    width: auto;
-    padding-right: 15vw;
+    transform: translateX(14vw);
+    width: 13rem;
   }
   .pagination {
     margin-top: 3rem;
@@ -1218,7 +1272,7 @@ form{
 }
 .update-name {
   width: 80%;
-  top: 60%;
+  top: 28%;
 }
 .update-name h1 {
    width: 90%;
@@ -1236,3 +1290,13 @@ form{
   width: 6rem;
 }
 }
+
+/* starting big screen */
+@media screen and (min-width: 1023px) and (max-width: 1200px) {
+  .hide-mobile {
+    display: none;
+  }
+  .hide-desktop {
+    display: block;
+  }
+} 
