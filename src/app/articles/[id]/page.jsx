@@ -146,6 +146,7 @@ function Page({params}) {
       const doc = new DOMParser().parseFromString(html, 'text/html');
       return (doc.body.textContent || "").replace(/\s+/g, '');
     };
+    
     const blogLength = stripHtml(item?.blog).length ?? 'N/A';
     const readingTime = determineReadingTime(blogLength);
 
@@ -284,5 +285,4 @@ function Page({params}) {
   )
 }
 
-// export default TokenValidation(Page);
 export default Page;

@@ -25,3 +25,4 @@ export default async function getProducts() {
     throw new Error(`Error fetching products: ${error.message}`);
   }
 }
+

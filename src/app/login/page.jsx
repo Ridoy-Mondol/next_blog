@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
 import { setCookie } from 'cookies-next';
+import { toast } from 'react-toastify';
 
 const Login = () => {
     const [error, setError] = useState({});
@@ -46,11 +47,12 @@ const Login = () => {
                         setError({});
                         window.location.href = '/';
                     } else {
-                        setError({ invalid: res_data.message});
+                        toast.error(res_data.message);
                     }
                 } else {
                     const responseData = await response.json();
-                    setError({ invalid: responseData.message });
+                    toast.error(responseData.message);
+
                 }
             } catch (error) {
                 console.error("Error submitting form:", error);
@@ -93,7 +95,6 @@ const Login = () => {
                                 />
                             </div>
                             <div className="error-msg reg-error-msg">{error.email}</div>
-                            {error.invalid && <div className="error-msg reg-error-msg">{error.invalid}</div>}
 
                             <div className="relative">
                                 <FontAwesomeIcon icon={faLock} className="reg-icon" />
@@ -107,7 +108,6 @@ const Login = () => {
                                 />
                             </div>
                             <div className="error-msg reg-error-msg">{error.password}</div>
-                            {error.invalid && <div className="error-msg reg-error-msg">{error.invalid}</div>}
 
                             <label className="reg-checkbox">
                                 <input

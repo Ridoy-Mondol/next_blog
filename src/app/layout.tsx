@@ -4,8 +4,8 @@ import "./globals.css";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
 config.autoAddCss = false;
-// import Navbar from "./components/Navbar";
-// import Footer from "@/app/components/Footer";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const inter = Inter({ subsets: ["latin"] });
 // import 'tailwindcss/tailwind.css';
 
@@ -25,6 +25,12 @@ export default function RootLayout({
     <html lang="en">
       <body className={`body ${inter.className}`}>
         {children}
+        <ToastContainer 
+          position="top-center"
+          autoClose={3000}
+          theme="colored"
+          bodyClassName="toast-body"
+        />
       </body>
     </html>
   );

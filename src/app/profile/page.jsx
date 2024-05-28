@@ -166,7 +166,7 @@ return (
       </div>
     </div>
 
-  <div className={`position-absolute update-name ${showImg ? "" : "d-none"}`}>
+  <div className={`position-absolute update-profile-name update-name ${showImg ? "" : "d-none"}`}>
   <h1> Change Profile Image</h1>
   <input type="file" accept="image/*" className="update-name-input update-img"
   onChange={(e) => setImg (e.target.files[0])}
@@ -178,7 +178,7 @@ return (
 </div>
   
 
-  <div className={`position-absolute update-name ${show ? "" : "d-none"}`}>
+  <div className={`position-absolute update-profile-name update-name ${show ? "" : "d-none"}`}>
   <h1> Change Your Name</h1>
   <input type="text" value={name} className="update-name-input"
   onChange={(e) => setName (e.target.value)}

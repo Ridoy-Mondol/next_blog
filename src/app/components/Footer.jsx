@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFacebook, faLinkedin, faInstagram } from "@fortawesome/free-brands-svg-icons";
+import { faFacebook, faLinkedin } from "@fortawesome/free-brands-svg-icons";
+import { GlobeAltIcon } from "@heroicons/react/outline";
 
 const Footer = () => {
   return (
@@ -31,8 +32,8 @@ const Footer = () => {
             <Link target="_blank" href="https://www.linkedin.com/in/md-ridoy-mondol-885555297/">
             <FontAwesomeIcon icon={faLinkedin} className="text-[#E5E5E5] hover:text-[#F86F03]" />
             </Link>
-            <Link target="_blank" href="https://www.linkedin.com/in/md-ridoy-mondol-885555297/">
-            <FontAwesomeIcon icon={faInstagram} className="text-[#E5E5E5] hover:text-[#F86F03]" />
+            <Link target="_blank" href="https://ridoy-mondol.github.io/portfolio/">
+            <GlobeAltIcon className="h-[16px] w-[16px] text-[#E5E5E5] hover:text-[#F86F03] mt-[2px]" />
             </Link>
           </div>
         </div>

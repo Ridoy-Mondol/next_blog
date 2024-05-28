@@ -6,13 +6,13 @@ import img from "@/app/Images/signup-image.jpg";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faEnvelope, faLock, faUnlockAlt, faImage  } from '@fortawesome/free-solid-svg-icons';
 import { setCookie } from 'cookies-next';
+import { toast } from 'react-toastify';
 
 
 const Registration = () => {
     const [error, setError] = useState({});
     const [success, setSuccess] = useState (false);
     const [isChecked, setIsChecked] = useState(false);
-    const [regMsg, setRegMsg] = useState ("");
     const [image, setImage] = useState("");
     const [imageName, setImageName] = useState('Choose Profile Image');
     const [value, setValue] = useState(
@@ -44,6 +44,7 @@ const Registration = () => {
     const handleCheckboxChange = (event) => {
         setIsChecked(event.target.checked);
       };
+    
     const handleSubmit = async (event) => {
         event.preventDefault();
         const formError = validate(value);
@@ -53,30 +54,38 @@ const Registration = () => {
         formData.append('email', value.email);
         formData.append('password', value.password);
         image && formData.append('image', image);
+      
         if (Object.keys(formError).length === 0 && isChecked) {
-            try {
-                const response = await fetch("/api/users/signup", {
-                method: "POST",
-                body: formData,
-                });
-                if (response.ok) {
-                const res_data = await response.json();
-                 if (res_data.status === 200) {
-                    setRegMsg('');
-                    setCookie('token2', res_data.token, { maxAge: 10 * 24 * 60 * 60 });
-                    window.location.href = '/';
-                } else {
-                    setRegMsg(res_data.message);
-                }
-                } else {
-                    throw new Error("Failed to submit the form");
-                }
-                
-            } catch (error) {
-                console.error("Error submitting form:", error);
+          try {
+            const response = await fetch("/api/users/signup", {
+              method: "POST",
+              body: formData,
+            });
+      
+            if (response.ok) {
+              const res_data = await response.json();
+      
+              if (res_data.success) {
+                setCookie('token2', res_data.token, { maxAge: 10 * 24 * 60 * 60 });
+                window.location.href = '/';
+              } else {
+                toast.error(res_data.message);
+              }
+            } else {
+              const errorData = await response.json();
+              toast.error(errorData.message);
+              throw new Error("Failed to submit the form");
             }
+          } catch (error) {
+            console.error("Error submitting form:", error);
+          }
         }
-    }
+      };
+      
+      
+      
+
+
     const validate = () => {
         const error = {};
         if(!value.name) {
@@ -137,7 +146,6 @@ const Registration = () => {
                    </div>
                    <div className = "reg-error-msg">{error.email}
                    </div>
-                   {(regMsg && !error.email) && <div className='reg-error-msg'>{regMsg} </div>}
     
                    <div className='relative'>
                    <FontAwesomeIcon icon={faLock} className="reg-icon" />

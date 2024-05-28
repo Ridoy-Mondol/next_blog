@@ -3,6 +3,7 @@ import connectDB from '@/db/connection';
 import BlogPost from '@/models/blogModel';
 import user from "@/models/signupModel";
 import cloudinary from '@/utils/cloudinary';
+import {redisClient, connectRedis} from "@/utils/redis"
 import { DateTime } from 'luxon';
 import jwt from 'jsonwebtoken';
 
@@ -42,6 +43,9 @@ export async function POST(request) {
     });
 
     await newPost.save();
+
+    await redisClient.del('blog_posts');
+
     return new NextResponse(
       JSON.stringify({ success: true }),
       { status: 200 }
@@ -78,24 +82,35 @@ function uploadToCloudinary(buffer, fileName, mimeType) {
 
 
 
-
-
 export async function GET(request) {
   let result = [];
   let success = true;
   const token = request.headers.get('Authorization')?.split(' ')[1];
   let userId;
+  const cacheKey = 'blog_posts';
+
   try {
     await connectDB();
+    await connectRedis();
     const decodedToken = jwt.verify(token, secretKey);
     userId = decodedToken.userId;
-    result = await BlogPost.find();
+
+    const cachedData = await redisClient.get(cacheKey);
+    if (cachedData) {
+      result = JSON.parse(cachedData);
+      console.log('Data fetched from Redis cache');
+    } else {
+      result = await BlogPost.find();
+      await redisClient.set(cacheKey, JSON.stringify(result), 'EX', 100);
+      console.log('Data fetched from MongoDB and stored in Redis cache');
+    }
   } catch (error) {
     console.error('Error fetching blog posts:', error);
+    success = false;
   }
-  return NextResponse.json({result, success, userId});
-}
 
+  return NextResponse.json({ result, success, userId });
+}
 
 
 

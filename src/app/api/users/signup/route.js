@@ -87,7 +87,7 @@ function uploadToCloudinary(buffer, fileName, mimeType) {
     stream.end(buffer);
   });
 }
-  
+
 
 
 

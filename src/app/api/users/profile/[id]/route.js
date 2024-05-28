@@ -2,30 +2,69 @@ import signupUser from "@/models/signupModel";
 import connectDB from '@/db/connection';
 import { NextResponse } from "next/server";
 import cloudinary from '@/utils/cloudinary';
-import fs from 'fs/promises';
+import {redisClient, connectRedis} from "@/utils/redis"
 import jwt from 'jsonwebtoken';
 
 const secretKey = process.env.JWT_SECRET_KEY;
 export async function GET(request, content) {
-    let result = {};
-    let success = true;
-    try {
-      await connectDB();
-      const id = content.params.id;
+  let result = {};
+  let success = true;
+  try {
+    await connectDB();
+    await connectRedis();
+    
+    const id = content.params.id;
+
+    if (!id) {
+      throw new Error('User ID is missing');
+    }
+
+    const cacheKey = `profile_data_${id}`;
+    const cachedData = await redisClient.get(cacheKey);
+
+    if (cachedData) {
+      result = JSON.parse(cachedData);
+      console.log('User fetched from Redis cache');
+    } else {
       result = await signupUser.findOne({ _id: id });
+
       if (!result) {
         success = false;
       }
-    } catch (error) {
-      console.error('Error fetching blog post:', error);
-      success = false;
+
+      await redisClient.set(cacheKey, JSON.stringify(result), 'EX', 3600);
+      console.log('User fetched from MongoDB and stored in Redis cache');
     }
-    return NextResponse.json({ result, success });
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    success = false;
   }
 
-  export async function PATCH(request) {
+  return NextResponse.json({ result, success });
+}
+
+
+// export async function GET(request, content) {
+//   let result = {};
+//   let success = true;
+//   try {
+//     await connectDB();
+//     const id = content.params.id;
+//     id !== undefined && (result = await signupUser.findOne({ _id: id }));
+//     if (!result) {
+//       success = false;
+//     }
+//   } catch (error) {
+//     console.error('Error fetching blog post:', error);
+//     success = false;
+//   }
+//   return NextResponse.json({ result, success });
+// }
+
+
+  export async function PATCH(request, content) {
     let success = false;
-  
+    const id = content.params.id;
     try {
       const data = await request.formData();
       const updates = {};
@@ -58,6 +97,7 @@ export async function GET(request, content) {
       if (success) {
         await connectDB();
         await signupUser.updateOne({ _id: userId }, { $set: updates });
+        await redisClient.del(`profile_data_${id}`);
         return new NextResponse(JSON.stringify({ success }), { status: 200 });
       } else {
         return new NextResponse(JSON.stringify({ success: false, message: 'No valid fields to update' }), { status: 400 });

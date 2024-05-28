@@ -3,21 +3,50 @@ import connectDB from '@/db/connection';
 import BlogPost from '@/models/blogModel';
 import user from "@/models/signupModel";
 import cloudinary from '@/utils/cloudinary';
+import {redisClient, connectRedis} from "@/utils/redis"
 import { DateTime } from 'luxon';
 import jwt from 'jsonwebtoken';
 
 
 const secretKey = process.env.JWT_SECRET_KEY;
 
+
+// export async function GET(request, content) {
+//   let result = {};
+//   let success = true;
+//   try {
+//     await connectDB();
+//     const id = content.params.id;
+//     result = await BlogPost.findOne({ _id: id });
+//     if (!result) {
+//       success = false;
+//     }
+//   } catch (error) {
+//     console.error('Error fetching blog post:', error);
+//     success = false;
+//   }
+//   return NextResponse.json({ result, success });
+// }
+
 export async function GET(request, content) {
   let result = {};
   let success = true;
   try {
     await connectDB();
+    await connectRedis();
     const id = content.params.id;
-    result = await BlogPost.findOne({ _id: id });
-    if (!result) {
-      success = false;
+    const cacheKey = `single_blog_posts${id}`;
+    const cachedData = await redisClient.get(cacheKey);
+    if (cachedData) {
+      result = JSON.parse(cachedData);
+      console.log('Single data fetched from Redis cache');
+    } else {
+      result = await BlogPost.findOne({ _id: id });
+      if (!result) {
+        success = false;
+      }
+      await redisClient.set(cacheKey, JSON.stringify(result), 'EX', 3600);
+      console.log('Data fetched from MongoDB and stored in Redis cache');
     }
   } catch (error) {
     console.error('Error fetching blog post:', error);
@@ -26,15 +55,17 @@ export async function GET(request, content) {
   return NextResponse.json({ result, success });
 }
 
-
 export async function DELETE(request, content) {
   const id = content.params.id;
   const token = request.headers.get('Authorization')?.split(' ')[1];
+  let success;
   try {
      await connectDB();
      const decodedToken = jwt.verify(token, secretKey);
      const userId = decodedToken.userId;
      await BlogPost.deleteOne({ _id: id, 'user.author': userId });
+     await redisClient.del('blog_posts');
+     await redisClient.del(`single_blog_posts${id}`);
      return NextResponse.json({ success: true, userId });
   } catch (error) {
     console.log('Error deleting post:', error);
@@ -92,6 +123,8 @@ export async function PATCH(request, content) {
     if (success) {
       await connectDB();
       await BlogPost.updateMany({ _id: { $in: ids }, 'user.author': userId }, { $set: updates });
+      await redisClient.del('blog_posts');
+      await redisClient.del(`single_blog_posts${id}`);
       return NextResponse.json({ success });
     } else {
       return NextResponse.json({ success: false, message: 'No valid fields to update' });

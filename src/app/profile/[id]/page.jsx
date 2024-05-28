@@ -57,11 +57,13 @@ function Page({params}) {
     const [img, setImg] = useState("");
     const [loading, setLoading] = useState(true);
     const [loading2, setLoading2] = useState(true);
-    const [loading3, setLoading3] = useState(true);
+    const [loading3, setLoading3] = useState(true);  
 
     const {id} = params;
 
     const token = getCookie('token2');
+
+    // let authorId = '6648975026227c8c9640e018';
 
     async function getAllProducts(token) {
         const headers = new Headers();
@@ -91,7 +93,6 @@ function Page({params}) {
           try {
             const data = await getProducts(id);
             setItem(data);
-            // setLoading3(false);
           } catch (error) {
             console.error('Error fetching products:', error);
           }
@@ -107,7 +108,6 @@ function Page({params}) {
             setPostData(data);
             setLoading(false);
           } catch (error) {
-            // setError('Error fetching products');
             console.error('Error fetching products:', error);
           }
         }
@@ -116,18 +116,21 @@ function Page({params}) {
       }, [token]);
       
       useEffect(() => {
-        async function fetchData() {
-          try {
-            const data = await getUser(item.user?.author);
-            setUser(data);
-            setLoading2(false);
-          } catch (error) {
-            console.error('Error fetching user:', error);
+        if (item?.user?.author) {
+          const authorId = item?.user?.author;
+          async function fetchData() {
+            try {
+              const data = await getUser(authorId);
+              setUser(data);
+              setLoading2(false);
+            } catch (error) {
+              console.error('Error fetching user:', error);
+            }
           }
+    
+          fetchData();
         }
-      
-        fetchData();
-      }, [item.user?.author]);
+      }, [item]);
 
       useEffect(() => {
         setName(user.name || '');
