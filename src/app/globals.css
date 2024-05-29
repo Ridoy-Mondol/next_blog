@@ -1010,7 +1010,7 @@ form{
     font-size: 0.9rem;
   }
   .editpart {
-    top: 5vh;
+    top: 0vh;
     transform: translateX(0vw);
     width: 12rem;
   }
