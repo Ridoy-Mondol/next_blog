@@ -61,7 +61,6 @@ if (loading) {
   <Navbar />
   <Slider {...settings}>   
   {post.slice(0, 5).map((item,index) => {
-    // 
     const stripHtmlTags = (htmlString) => {
       const regex = /(<([^>]+)>)/gi;
       return htmlString.replace(regex, '');

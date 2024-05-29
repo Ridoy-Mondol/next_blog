@@ -141,7 +141,7 @@ async function deleteItem (id, author) {
     <>
     <Navbar />
     <div className='position-relative article-div'>
-      <Image src={img} alt='' className='w-100 article-img'/>
+      <Image placeholder='blur' src={img} alt='' className='w-100 article-img'/>
       <div className='position-absolute w-100 top-0 y  pt-28'>
         <h1 className='blog-heading'>
             Join Us on a Journey Through Ideas

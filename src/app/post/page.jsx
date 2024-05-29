@@ -34,12 +34,6 @@ function Page() {
   const handleBlogChange = (value) => {
     setBlog(value);
   };
-  // const config = useMemo(
-	// 	{
-	// 		readonly: false,
-	// 		placeholder: 'Start typings...'
-	// 	},
-	// );
 
   const handleCategoryChange = (event) => {
     const { value } = event.target;
