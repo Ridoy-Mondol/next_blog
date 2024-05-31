@@ -1,35 +1,12 @@
-"use client";
-import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinus } from '@fortawesome/free-solid-svg-icons';
 import Image from "next/image";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import getProducts from '@/app/components/getProducts';
-import { getCookie } from 'cookies-next';
-import Navbar from "@/app/components/Navbar";
 
 
-export default function HeroSection() {
-const [post, setPost] = useState([]);
-const [error, setError] = useState(null);
-const [loading, setLoading] = useState(true);
-const token = getCookie('token2');
-
-useEffect(() => {
-  async function fetchData() {
-    try {
-      const data = await getProducts(token);
-      setPost(data);
-      setLoading(false);
-    } catch (error) {
-      setError('Error fetching products');
-    }
-  }
-
-  fetchData();
-}, [token]);
+export default function HeroSection(props) {
   const settings = {
     dots: true,
     dotsClass: "slick-dots-custom",
@@ -41,26 +18,9 @@ useEffect(() => {
     autoplaySpeed: 5000,
 };
 
-if (loading) {
   return (
-    <div className="spinner-container">
-      <div className="loading-spinner">
-        <div className="spinner-ring"></div>
-        <div className="spinner-ring"></div>
-        <div className="spinner-ring"></div>
-        <div className="spinner-center"></div>
-        <div className="spinner-text">Loading...</div>
-      </div>
-    </div>
-  );
-
-}
-  
-  return (
-  <>
-  <Navbar />
   <Slider {...settings}>   
-  {post.slice(0, 5).map((item,index) => {
+  {props.post.slice(0, 5).map((item,index) => {
     const stripHtmlTags = (htmlString) => {
       const regex = /(<([^>]+)>)/gi;
       return htmlString.replace(regex, '');
@@ -95,6 +55,5 @@ if (loading) {
       )
     })} 
     </Slider>
-    </>
   );
 }

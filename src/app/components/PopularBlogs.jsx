@@ -1,36 +1,8 @@
-"use client"
-import { useState, useEffect } from "react";
 import Link from "next/link"
 import Image from "next/image"
 import userImg from "@/app/Images/user_img.jpg"
-import getProducts from '@/app/components/getProducts';
-import { getCookie } from 'cookies-next';
 
-function PopularBlogs() {
-const [post, setPost] = useState([]);
-const [error, setError] = useState(null);
-const [loading, setLoading] = useState(true);
-
-const token = getCookie('token2');
-
-useEffect(() => {
-  async function fetchData() {
-    try {
-      const data = await getProducts(token);
-      setPost(data);
-      setLoading(false);
-    } catch (error) {
-      setError('Error fetching products');
-    }
-  }
-
-  fetchData();
-}, [token]);
-
-if (loading) {
-  return <div></div>
- }
-
+function PopularBlogs(props) {
   return (
     <div className="popular-div">
        <h1 className="home-heading font-bold popular-head my-4">
@@ -39,7 +11,7 @@ if (loading) {
 
       <div className="flex flex-wrap popular-blogs">
       {
-        post.slice(0,8).map ((val,index) => {
+        props.post.slice(0,8).map ((val,index) => {
           return (
             <Link href = {`/articles/${val._id}`} className="popular-single position-relative" key={val._id}>
                  <span className="text-xs text-white text-center home-category position-absolute popular-category">

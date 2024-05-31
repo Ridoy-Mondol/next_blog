@@ -1,37 +1,9 @@
-"use client"
-import { useState, useEffect } from "react"
 import Image from "next/image"
 import  Link  from "next/link"
 import userImg from "@/app/Images/user_img.jpg"
-import getProducts from '@/app/components/getProducts';
-import { getCookie } from 'cookies-next';
-import Footer from "./Footer"
 
-function Editors_pick() {
-const [post, setPost] = useState([]);
-const [error, setError] = useState(null);
-const [loading, setLoading] = useState(true);
-
-const token = getCookie('token2');
-
-useEffect(() => {
-  async function fetchData() {
-    try {
-      const data = await getProducts(token);
-      setPost(data);
-      setLoading(false);
-    } catch (error) {
-      setError('Error fetching products');
-    }
-  }
-
-  fetchData();
-}, [token]);
-if (loading) {
-  return <div> </div>
- }
+function Editors_pick(props) {
   return (
-    <>
     <div className="popular-div pt-0">
        <h1 className="home-heading font-bold popular-head my-4">
             Editor’s Pick
@@ -39,7 +11,7 @@ if (loading) {
 
     <div className="flex flex-wrap popular-blogs">
     {
-      post.map((val,index) => {
+      props.post.map((val,index) => {
       if (index === 1 || index === 3 || index === 2 || index === 7) {
         return (
         <Link href={`/articles/${val._id}`} className="popular-single position-relative" key={val._id}>
@@ -74,8 +46,6 @@ if (loading) {
 
 </div> 
 </div>
- <Footer />
-</>
 )
 }
 
