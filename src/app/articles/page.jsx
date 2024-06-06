@@ -158,11 +158,11 @@ async function deleteItem (id, author) {
 
             return (
               <div className='flex blog-div my-8' key={val._id}>
-                <div className='blog-img-div'>
+                <Link href={`/articles/${val._id}`} className='blog-img-div'>
                 <Image src={val.image1} alt='' className='blog-img' 
                 width='1000' 
                 height='1000'/>
-                </div>
+                </Link>
                 <div className='blog-para-div'>
                   <div className='d-flex justify-between align-items-start position-relative'>
                    <h1 className='font-bold blog-title'>

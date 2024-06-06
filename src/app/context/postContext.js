@@ -8,8 +8,10 @@ const PostsContext = createContext();
 export const PostsProvider = ({ children }) => {
   const [posts, setPosts] = useState([]);
   const [singlePost, setSinglePost] = useState(null);
-  const [error, setError] = useState(null);
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [loading2, setLoading2] = useState(true);
+  const [error, setError] = useState(false);
   const [author, setAuthor] = useState('');
 
 
@@ -80,10 +82,25 @@ export const PostsProvider = ({ children }) => {
       setPosts(result);
       setLoading(false);
     } catch (err) {
-      setError(err.message);
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    async function fetchUser() {
+      try {
+        const data = await getUser(author);
+        setUser(data);
+        setLoading2(false);
+      } catch (error) {
+        console.error('Error fetching user:', error);
+      }
+    }
+  
+    if (author) {
+      fetchUser();
+    }
+  }, [author]);
 
   const getSinglePost = async (id) => {
     try {
@@ -104,7 +121,7 @@ export const PostsProvider = ({ children }) => {
   }, []);
 
   return (
-    <PostsContext.Provider value={{ posts, loading, author, deletePost, error, loadPosts, getSinglePost, singlePost, getUser }}>
+    <PostsContext.Provider value={{ posts, loading, author, deletePost, getSinglePost, singlePost, getUser, user, loading2 }}>
       {children}
     </PostsContext.Provider>
   );

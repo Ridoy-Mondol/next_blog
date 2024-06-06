@@ -204,7 +204,7 @@ form{
 }
 .navForRoute2 {
   background-color: #222222;
-} 
+}
 .nav-link {
   color: #E5E5E5;
   transition: color 0.2s ease-in-out;
@@ -212,6 +212,10 @@ form{
 .nav-link:hover {
   color: #F86F03;
   transition: color 0.2s ease-in-out;
+}
+.nav-link.active {
+  font-weight: 700;
+  color: #0070f3;
 }
 .sidebar-icon, .sidebar {
   display: none;
@@ -837,6 +841,12 @@ form{
 
 
   /* navbar */
+  .nav-link:hover {
+    color: #E5E5E5;
+  }
+  .nav-link.active {
+    color: #0070f3;
+  }
   .nav-link-div {
     display: none;
   }
@@ -1106,6 +1116,12 @@ form{
   top: 1.45rem;
 }
   /* navbar */
+  .nav-link:hover {
+    color: #E5E5E5;
+  }
+  .nav-link.active {
+    color: #0070f3;
+  }
   .nav-link-div {
     display: none;
   }

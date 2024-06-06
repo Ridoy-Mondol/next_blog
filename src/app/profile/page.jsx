@@ -12,32 +12,15 @@ import { getCookie } from 'cookies-next';
 import { usePosts } from '@/app/context/postContext';
 
 function Page() {
-    const [user, setUser] = useState({});
     const [show, setShow] = useState(false);
     const [showImg, setShowImg] = useState(false);
     const [name, setName] = useState('');
     const [img, setImg] = useState("");
-    const [loading2, setLoading2] = useState(true);
 
-    const { posts, loading, author, getUser } = usePosts();
-
-      
-      useEffect(() => {
-        async function fetchData() {
-          try {
-            const data = await getUser(author);
-            setUser(data);
-            setLoading2(false);
-          } catch (error) {
-            console.error('Error fetching user:', error);
-          }
-        }
-      
-        fetchData();
-      }, [author]);
+    const { posts, loading, author, user, loading2 } = usePosts();
 
       useEffect(() => {
-        setName(user.name || '');
+        setName(user?.name || '');
       }, [user]);
 
       const updateInfo = async () => {
@@ -93,13 +76,13 @@ return (
 <div className="profile-div position-relative">
 <div className="profile-card">
       <div className="profile-image" onClick={() => setShowImg (true)}>
-        <Image src={user.profileImage != null ? user.profileImage : profileImage} alt="Profile" 
+        <Image src={user?.profileImage != null ? user?.profileImage : profileImage} alt="Profile" 
          width="1000"
          height="1000"
         />
       </div>
       <div className="profile-info">
-        <h2 className="text-capitalize">{user.name}
+        <h2 className="text-capitalize">{user?.name}
         <FontAwesomeIcon icon={faPen}
         className="ml-2" onClick={() => setShow(true)}/>
         </h2>
@@ -132,7 +115,7 @@ return (
 
     <div className='profile-parent'>
               <h3 className="mb-3 pl-0 font-semibold popular-title single-title">
-                 All Posts of <span className="text-capitalize">{user.name}</span>
+                 All Posts of <span className="text-capitalize">{user?.name}</span>
               </h3>
               <div className='flex justify-between flex-wrap gap-8'>
                 {
