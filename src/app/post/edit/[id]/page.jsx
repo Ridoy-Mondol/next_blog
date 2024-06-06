@@ -4,40 +4,23 @@ import 'draft-js/dist/Draft.css';
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import { getCookie } from 'cookies-next';
+import { usePosts } from '@/app/context/postContext';
 import dynamic from 'next/dynamic';
 const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
 
-async function getProducts(id) {
-  try {
-    const response = await fetch(`/api/users/blog/${id}`);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    const data = await response.json();
-    if (data.success) {
-      return data.result;
-    } else {
-      return [];
-    }
-  } catch (error) {
-    throw new Error(`Error fetching products: ${error.message}`);
-  }
-}
-
 
 function Page({params}) {
-  const [item, setItem] = useState([]);
   const [loading, setLoading] = useState(true);
   const {id} = params;
   const editor = useRef(null);
+  const { getSinglePost, singlePost } = usePosts();
   useEffect(() => {
     async function fetchData() {
       try {
-        const data = await getProducts(id);
-        setItem(data);
+        await getSinglePost(id);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error('Error fetching post:', error);
       }
     }
   
@@ -45,10 +28,10 @@ function Page({params}) {
   }, [id]);
 
   useEffect(() => {
-    setTitle(item.title);
-    setBlog(item.blog || '');
-    setCategory(item.category || '');
-  }, [item]);
+    setTitle(singlePost?.title);
+    setBlog(singlePost?.blog || '');
+    setCategory(singlePost?.category || '');
+  }, [singlePost]);
 
   const [title, setTitle] = useState('');
   const [blog, setBlog] = useState('');

@@ -9,77 +9,18 @@ import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import userImg from "@/app/Images/user_img.jpg";
 import { getCookie } from 'cookies-next';
-
-
-async function getUser(authorId) {
-  try {
-    const response = await fetch(`/api/users/profile/${authorId}`);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    const data = await response.json();
-    if (data.success) {
-      return data.result;
-    } else {
-      return {};
-    }
-  } catch (error) {
-    throw new Error(`Error fetching user: ${error.message}`);
-  }
-}
-
+import { usePosts } from '@/app/context/postContext';
 
 function Page() {
-    const [postData, setPostData] = useState([]);
     const [user, setUser] = useState({});
-    const [author, setAuthor] = useState('');
     const [show, setShow] = useState(false);
     const [showImg, setShowImg] = useState(false);
     const [name, setName] = useState('');
     const [img, setImg] = useState("");
-    const [loading, setLoading] = useState(true);
     const [loading2, setLoading2] = useState(true);
-    const [postNum, setPostNum] = useState(0);
 
+    const { posts, loading, author, getUser } = usePosts();
 
-    const token = getCookie('token2');
-
-    async function getAllProducts(token) {
-        const headers = new Headers();
-        headers.append('Authorization', `Bearer ${token}`);
-        try {
-          const response = await fetch(`/api/users/blog`, {
-            method: 'GET',
-            headers: headers,
-          });
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-          const data = await response.json();
-          if (data.success) {
-            setAuthor(data.userId);
-            return data.result;
-          } else {
-            return [];
-          }
-        } catch (error) {
-          throw new Error(`Error fetching products: ${error.message}`);
-        }
-      }
-
-      useEffect(() => {
-        async function fetchData() {
-          try {
-            const data = await getAllProducts(token);
-            setPostData(data);
-            setLoading(false);
-          } catch (error) {
-            console.error('Error fetching products:', error);
-          }
-        }
-      
-        fetchData();
-      }, [token]);
       
       useEffect(() => {
         async function fetchData() {
@@ -114,7 +55,7 @@ function Page() {
             headers: headers,
             body: formData,
           });
-          const res2 = await fetch(`/api/users/blog/${postData.map((post) => post._id)}`, {
+          const res2 = await fetch(`/api/users/blog/${posts.map((post) => post._id)}`, {
             method: 'PATCH',
             headers: headers,
             body: formData,
@@ -162,7 +103,7 @@ return (
         <FontAwesomeIcon icon={faPen}
         className="ml-2" onClick={() => setShow(true)}/>
         </h2>
-        <p>Total Posts: {postData.filter(post => post.user?.author === author).length}</p>
+        <p>Total Posts: {posts.filter(post => post.user?.author === author).length}</p>
       </div>
     </div>
 
@@ -195,7 +136,7 @@ return (
               </h3>
               <div className='flex justify-between flex-wrap gap-8'>
                 {
-                 postData.map((val) => {
+                 posts.map((val) => {
                     if (val.user.author === author) {
                       return (
                          <Link href = {`/articles/${val._id}`} key = {val._id}className=" position-relative user-post"> <div>

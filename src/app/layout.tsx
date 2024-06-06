@@ -7,6 +7,7 @@ config.autoAddCss = false;
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 const inter = Inter({ subsets: ["latin"] });
+import { PostsProvider } from "@/app/context/postContext";
 // import 'tailwindcss/tailwind.css';
 
 export const metadata: Metadata = {
@@ -19,11 +20,11 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // const pathname = usePathname();
 
   return (
     <html lang="en">
       <body className={`body ${inter.className}`}>
+       <PostsProvider>
         {children}
         <ToastContainer 
           position="top-center"
@@ -31,6 +32,7 @@ export default function RootLayout({
           theme="colored"
           bodyClassName="toast-body"
         />
+        </PostsProvider>
       </body>
     </html>
   );

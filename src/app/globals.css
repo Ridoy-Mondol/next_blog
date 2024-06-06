@@ -750,11 +750,11 @@ form{
   gap: 1rem;
   border-radius: 3%;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.9);
-  top: 45%;
+  top: 47%;
   z-index: 1;
 }
 .update-profile-name {
-  top: 22%;
+  top: 34%;
 }
 .update-name h1 {
    color: #222222;
@@ -1068,7 +1068,7 @@ form{
   top: 45%;
 }
 .update-profile-name {
-  top: 10%;
+  top: 15%;
 }
 .update-name h1 {
    width: 90%;
@@ -1277,10 +1277,10 @@ form{
 }
 .update-name {
   width: 80%;
-  top: 50%;
+  top: 51%;
 }
 .update-profile-name {
-  top: 15%;
+  top: 23%;
 }
 .update-name h1 {
    width: 90%;

@@ -1,5 +1,5 @@
 "use client"
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
 import img from "@/app/Images/goldenleaf.jpg"
 import userImg from "@/app/Images/user_img.jpg"
 import Image from 'next/image'
@@ -8,41 +8,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisH, faPen, faTrash, faEye } from '@fortawesome/free-solid-svg-icons';
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
+import { usePosts } from '@/app/context/postContext';
 import { getCookie } from 'cookies-next';
 
 function Page() {
-const [post, setPost] = useState([]);
-const [error, setError] = useState(null);
-const [loading, setLoading] = useState(true);
 const [showbox, setShowbox] = useState (false);
 const [id, setId] = useState(null);
-const [author, setAuthor] = useState('');
 
-
-async function getProducts(token) {
-  const headers = new Headers();
-  headers.append('Authorization', `Bearer ${token}`);
-  try {
-    const response = await fetch('/api/users/blog', {
-      method: 'GET',
-      headers: headers,
-    });
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    const data = await response.json();
-    if (data.success) {
-      setAuthor (data.userId);
-      return data.result;
-    } else {
-      return [];
-    }
-  } catch (error) {
-    throw new Error(`Error fetching products: ${error.message}`);
-  }
-}
-
-
+const { posts, loading, author, deletePost } = usePosts();
 
 const token = getCookie('token2');
 
@@ -51,23 +24,6 @@ const Showbox = (_id) => {
   setId(_id);
   setShowbox(!showbox);
 }
-
-
-useEffect(() => {
-  async function fetchData() {
-    try {
-      const data = await getProducts(token);
-      setPost(data);
-      setLoading(false);
-    } catch (error) {
-      setError('Error fetching products');
-      console.error('Error fetching products:', error);
-    }
-  }
-
-  fetchData();
-}, [token]);
-
 
 const headers = new Headers();
 headers.append('Authorization', `Bearer ${token}`);
@@ -80,7 +36,7 @@ async function deleteItem (id, author) {
     const data = await response.json();
     if (data.success === true) {
       if (data.userId === author)
-      setPost(prevPosts => prevPosts.filter(post => post._id !== id));
+      deletePost(id);
     } else {
       console.error('Failed to delete post');
     }
@@ -102,7 +58,7 @@ async function deleteItem (id, author) {
     Branding: 'Branding'
   };
   
-  let filteredItems = [...post].reverse().filter(item => {
+  let filteredItems = [...posts].reverse().filter(item => {
     if (currentCategory === 'All') {
       return true;
     } else {

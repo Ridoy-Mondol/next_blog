@@ -9,115 +9,39 @@ import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import userImg from "@/app/Images/user_img.jpg";
 import { getCookie } from 'cookies-next';
+import { usePosts } from '@/app/context/postContext';
 
-
-async function getUser(authorId) {
-  try {
-    const response = await fetch(`/api/users/profile/${authorId}`);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    const data = await response.json();
-    if (data.success) {
-      return data.result;
-    } else {
-      return {};
-    }
-  } catch (error) {
-    throw new Error(`Error fetching user: ${error.message}`);
-  }
-}
-
-
-async function getProducts(id) {
-  try {
-    const response = await fetch(`/api/users/blog/${id}`);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    const data = await response.json();
-    if (data.success) {
-      return data.result;
-    } else {
-      return [];
-    }
-  } catch (error) {
-    throw new Error(`Error fetching products: ${error.message}`);
-  }
-}
 
 function Page({params}) {
-    const [postData, setPostData] = useState([]);
-    const [item, setItem] = useState([]);
     const [user, setUser] = useState({});
-    const [author, setAuthor] = useState('');
     const [show, setShow] = useState(false);
     const [showImg, setShowImg] = useState(false);
     const [name, setName] = useState('');
     const [img, setImg] = useState("");
-    const [loading, setLoading] = useState(true);
     const [loading2, setLoading2] = useState(true);
-    const [loading3, setLoading3] = useState(true);  
+    const [loading3, setLoading3] = useState(true); 
+    
+    const { posts, loading, author, getUser, getSinglePost, singlePost } = usePosts();
 
     const {id} = params;
 
-    const token = getCookie('token2');
-
-    // let authorId = '6648975026227c8c9640e018';
-
-    async function getAllProducts(token) {
-        const headers = new Headers();
-        headers.append('Authorization', `Bearer ${token}`);
-        try {
-          const response = await fetch(`/api/users/blog`, {
-            method: 'GET',
-            headers: headers,
-          });
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-          const data = await response.json();
-          if (data.success) {
-            setAuthor(data.userId);
-            return data.result;
-          } else {
-            return [];
-          }
-        } catch (error) {
-          throw new Error(`Error fetching products: ${error.message}`);
-        }
-      }
-
       useEffect(() => {
         async function fetchData() {
           try {
-            const data = await getProducts(id);
-            setItem(data);
+            await getSinglePost(id);
+            setLoading2(false);
           } catch (error) {
-            console.error('Error fetching products:', error);
+            console.error('Error fetching post:', error);
           }
         }
-      
+  
         fetchData();
       }, [id]);
 
-      useEffect(() => {
-        async function fetchData() {
-          try {
-            const data = await getAllProducts(token);
-            setPostData(data);
-            setLoading(false);
-          } catch (error) {
-            console.error('Error fetching products:', error);
-          }
-        }
-      
-        fetchData();
-      }, [token]);
       
       useEffect(() => {
-        if (item?.user?.author) {
-          const authorId = item?.user?.author;
+        if (singlePost?.user?.author) {
+          const authorId = singlePost?.user?.author;
           async function fetchData() {
             try {
               const data = await getUser(authorId);
@@ -130,7 +54,7 @@ function Page({params}) {
     
           fetchData();
         }
-      }, [item]);
+      }, [singlePost]);
 
       useEffect(() => {
         setName(user.name || '');
@@ -153,7 +77,7 @@ function Page({params}) {
             headers: headers,
             body: formData,
           });
-          const res2 = await fetch(`/api/users/blog/${postData.map((post) => post._id)}`, {
+          const res2 = await fetch(`/api/users/blog/${posts.map((post) => post._id)}`, {
             method: 'PATCH',
             headers: headers,
             body: formData,
@@ -201,7 +125,7 @@ return (
         <FontAwesomeIcon icon={faPen}
         className={`ml-2 ${user._id === author ? "" : "d-none"}`}  onClick={() => setShow(true)}/>
         </h2>
-        <p>Total Posts: {postData.filter(post => post.user?.author === user._id).length}</p>
+        <p>Total Posts: {posts.filter(post => post.user?.author === user._id).length}</p>
       </div>
     </div>
 
@@ -234,8 +158,8 @@ return (
               </h3>
               <div className='flex justify-between flex-wrap gap-8'>
                 {
-                 postData.map((val) => {
-                    if ((val.user.author != null || item.user?.author != null) && val.user?.author === item.user?.author) {
+                 posts.map((val) => {
+                    if ((val.user.author != null || singlePost.user?.author != null) && val.user?.author === singlePost.user?.author) {
                       return (
                          <Link href = {`/articles/${val._id}`} key = {val._id}className=" position-relative user-post"> <div>
                            <span className="text-xs text-center home-category position-absolute popular-category single-category">
