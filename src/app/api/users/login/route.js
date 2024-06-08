@@ -26,13 +26,6 @@ export async function POST(request) {
                     token: token,
                     body: JSON.stringify({ success: true })
                 });
-                // response.cookies.set({
-                //     name: "token",
-                //     value: token,
-                //     maxAge: 60 * 60 * 24 * 10,
-                //     httpOnly: true,
-                //     path: "/",
-                // });
                 return response;
             } else {
                 return NextResponse.json({

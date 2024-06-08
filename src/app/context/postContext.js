@@ -2,7 +2,6 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { getCookie } from 'cookies-next';
 
-
 const PostsContext = createContext();
 
 export const PostsProvider = ({ children }) => {
@@ -13,36 +12,70 @@ export const PostsProvider = ({ children }) => {
   const [loading2, setLoading2] = useState(true);
   const [error, setError] = useState(false);
   const [author, setAuthor] = useState('');
+  const token = getCookie('token2');
 
-
-  async function fetchPosts() {
-    const token = getCookie('token2');
-    const headers = new Headers();
-    headers.append('Authorization', `Bearer ${token}`);
-    
-    try {
-      const response = await fetch('/api/users/blog', {
-        method: 'GET',
-        headers: headers,
-      });
-  
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-  
-      const data = await response.json();
-      if (data.success) {
-        setAuthor(data.userId);
-        return data.result;
-      } else {
-        return [];
-      }
-    } catch (error) {
-      throw new Error(`Error fetching posts: ${error.message}`);
+  useEffect(() => {
+    if (!token) {
+      setLoading(false);
+      return;
     }
-  }
 
-  async function fetchSinglePost(id) {
+    const fetchPosts = async () => {
+      const headers = new Headers();
+      headers.append('Authorization', `Bearer ${token}`);
+      
+      try {
+        const response = await fetch('/api/users/blog', {
+          method: 'GET',
+          headers: headers,
+        });
+    
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+    
+        const data = await response.json();
+        if (data.success) {
+          setAuthor(data.userId);
+          setPosts(data.result);
+        }
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        setError(`Error fetching posts: ${error.message}`);
+      }
+    };
+
+    fetchPosts();
+  }, [token]);
+
+  useEffect(() => {
+    if (!author) {
+      setLoading2(false);
+      return;
+    }
+
+    const fetchUser = async () => {
+      try {
+        const response = await fetch(`/api/users/profile/${author}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        if (data.success) {
+          setUser(data.result);
+        }
+        setLoading2(false);
+      } catch (error) {
+        setLoading2(false);
+        console.error('Error fetching user:', error);
+      }
+    };
+
+    fetchUser();
+  }, [author]);
+
+  const fetchSinglePost = async (id) => {
     try {
       const response = await fetch(`/api/users/blog/${id}`);
       if (!response.ok) {
@@ -50,65 +83,14 @@ export const PostsProvider = ({ children }) => {
       }
       const data = await response.json();
       if (data.success) {
+        setSinglePost(data.result);
         return data.result;
       } else {
-        return [];
+        throw new Error(`Error fetching post: ${data.message}`);
       }
     } catch (error) {
-      throw new Error(`Error fetching product: ${error.message}`);
-    }
-  }
-
-  async function getUser(authorId) {
-    try {
-      const response = await fetch(`/api/users/profile/${authorId}`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      const data = await response.json();
-      if (data.success) {
-        return data.result;
-      } else {
-        return {};
-      }
-    } catch (error) {
-      throw new Error(`Error fetching user: ${error.message}`);
-    }
-  }
-
-  const loadPosts = async () => {
-    try {
-      const result = await fetchPosts();
-      setPosts(result);
-      setLoading(false);
-    } catch (err) {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    async function fetchUser() {
-      try {
-        const data = await getUser(author);
-        setUser(data);
-        setLoading2(false);
-      } catch (error) {
-        console.error('Error fetching user:', error);
-      }
-    }
-  
-    if (author) {
-      fetchUser();
-    }
-  }, [author]);
-
-  const getSinglePost = async (id) => {
-    try {
-      const result = await fetchSinglePost(id);
-      setSinglePost(result);
-      return result;
-    } catch (err) {
-      setError(err.message);
+      setError(error.message);
+      throw error;
     }
   };
 
@@ -116,12 +98,8 @@ export const PostsProvider = ({ children }) => {
     setPosts(prevPosts => prevPosts.filter(post => post._id !== id));
   };
 
-  useEffect(() => {
-    loadPosts();    
-  }, []);
-
   return (
-    <PostsContext.Provider value={{ posts, loading, author, deletePost, getSinglePost, singlePost, getUser, user, loading2 }}>
+    <PostsContext.Provider value={{ posts, loading, author, deletePost, fetchSinglePost, singlePost, user, loading2 }}>
       {children}
     </PostsContext.Provider>
   );
