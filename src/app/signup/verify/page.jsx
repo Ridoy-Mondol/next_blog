@@ -58,7 +58,7 @@ export default function Verify() {
           </button>
           <p className="text-gray-700 mb-0">
             <span className="mr-1">Back to</span>
-            <Link href="/signup" className="text-indigo-500 hover:text-indigo-700 transition-colors duration-300 redirect">Signup</Link>
+            <Link href="/signup" className="text-indigo-500 hover:text-indigo-700 transition-colors duration-300">Signup</Link>
           </p>
         </form>
       </div>

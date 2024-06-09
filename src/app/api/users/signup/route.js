@@ -33,6 +33,7 @@ async function sendVerificationEmail(email, code) {
                   margin: 0;
                   padding: 0;
                   background-color: #f4f4f4;
+                  overflow-x: hidden;
               }
               .container {
                   width: 100%;
@@ -169,7 +170,7 @@ export async function POST(request) {
     const tokenPayload = { name, email, password, imageUrl, verificationCode };
     const token = jwt.sign(tokenPayload, secretKey, { expiresIn: '10m' });
 
-    sendVerificationEmail(email, verificationCode);
+    sendVerificationEmail(email, verificationCode).catch((error) => console.error('Error sending verification code:', error));
 
     const response = new NextResponse(JSON.stringify({
       message: "Signup successful, please check your email for the token containing the verification code",

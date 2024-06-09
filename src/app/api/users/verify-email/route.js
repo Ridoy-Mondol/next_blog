@@ -185,6 +185,7 @@ async function sendVerificationEmail(email, verificationCode) {
             margin: 0;
             padding: 0;
             background-color: #f4f4f4;
+            overflow-x: hidden;
         }
         .container {
             width: 100%;
@@ -287,8 +288,7 @@ export async function POST(request) {
 
         const verificationCode = await generateVerificationCode();
 
-        // Send email asynchronously and handle errors
-        sendVerificationEmail(email, verificationCode);
+        sendVerificationEmail(email, verificationCode).catch((error) => console.error('Error sending reset code:', error));
 
         return new NextResponse(JSON.stringify({
             message: "Reset code sent successfully",

@@ -19,7 +19,7 @@ export async function POST(request) {
 
 
     if (!Verifytoken) {
-      throw new Error('Token not provided');
+      throw new Error('Session expired, please try again');
     }
 
     const { name, email, password, imageUrl, verificationCode } = jwt.verify(Verifytoken, secretKey);
