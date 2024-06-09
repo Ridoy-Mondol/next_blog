@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-function sendVerificationEmail(email) {
+async function sendVerificationEmail(email) {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
@@ -107,7 +107,7 @@ function sendVerificationEmail(email) {
     `,
   };
 
-  transporter.sendMail(mailOptions);
+  await transporter.sendMail(mailOptions);
 }
 
 // async function generateVerificationCode() {
@@ -171,7 +171,7 @@ export async function POST(request) {
     const tokenPayload = { name, email, password, imageUrl, code };
     const token = jwt.sign(tokenPayload, secretKey, { expiresIn: '10m' });
 
-    sendVerificationEmail(email);
+    const emailPromise = sendVerificationEmail(email);
 
     const response = new NextResponse(JSON.stringify({
       message: "Signup successful, please check your email for the token containing the verification code",
@@ -180,6 +180,7 @@ export async function POST(request) {
     }));
 
     response.cookies.set('token', token, { maxAge: 600 });
+    await Promise.allSettled([emailPromise]);
     return response;
 
   } catch (error) {

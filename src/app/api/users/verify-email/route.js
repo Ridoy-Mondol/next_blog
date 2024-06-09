@@ -167,7 +167,7 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-function sendVerificationEmail(email) {
+async function sendVerificationEmail(email) {
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to: email,
@@ -258,7 +258,7 @@ function sendVerificationEmail(email) {
      `
     };
 
-    transporter.sendMail(mailOptions);
+    await transporter.sendMail(mailOptions);
 }
 
 // async function generateVerificationCode() {
@@ -284,8 +284,8 @@ export async function POST(request) {
 
         // const verificationCode = await generateVerificationCode();
 
-        sendVerificationEmail(email);
-
+        const emailPromise = sendVerificationEmail(email);
+        await Promise.allSettled([emailPromise]);
         return new NextResponse(JSON.stringify({
             message: "Reset code sent successfully",
             success: true,
