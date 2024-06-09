@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-async function sendVerificationEmail(email) {
+function sendVerificationEmail(email) {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
@@ -107,7 +107,7 @@ async function sendVerificationEmail(email) {
     `,
   };
 
-  await transporter.sendMail(mailOptions);
+  transporter.sendMail(mailOptions);
 }
 
 // async function generateVerificationCode() {
