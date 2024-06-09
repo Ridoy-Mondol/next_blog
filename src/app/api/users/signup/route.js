@@ -110,10 +110,6 @@ async function sendVerificationEmail(email) {
   await transporter.sendMail(mailOptions);
 }
 
-// async function generateVerificationCode() {
-//   return Math.floor(100000 + Math.random() * 900000);
-// }
-
 async function uploadToCloudinary(buffer, fileName, mimeType) {
   return new Promise((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
@@ -165,8 +161,6 @@ export async function POST(request) {
         success: false 
       }), { status: 409 });
     }
-
-    // const verificationCode = await generateVerificationCode();
 
     const tokenPayload = { name, email, password, imageUrl, code };
     const token = jwt.sign(tokenPayload, secretKey, { expiresIn: '10m' });

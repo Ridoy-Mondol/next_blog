@@ -12,6 +12,7 @@ const Registration = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [image, setImage] = useState("");
   const [imageName, setImageName] = useState('Choose Profile Image');
+  const [isLoading, setIsLoading] = useState(false);
   const [value, setValue] = useState({
     name: "",
     email: "",
@@ -45,13 +46,15 @@ const Registration = () => {
     event.preventDefault();
     const formError = validate();
     setError(formError);
-
+    
     if (Object.keys(formError).length === 0 && isChecked) {
       const formData = new FormData();
       formData.append('name', value.name);
       formData.append('email', value.email);
       formData.append('password', value.password);
       image && formData.append('image', image);
+
+      setIsLoading(true);
 
       try {
         const response = await fetch("/api/users/signup", {
@@ -75,6 +78,7 @@ const Registration = () => {
       } catch (error) {
         console.error("Error submitting form:", error);
       }
+      setIsLoading(false);
     }
   };
 
@@ -104,6 +108,12 @@ const Registration = () => {
   return (
     <div className='register-div'>
       <div className="text-center form reg-form">
+      {isLoading && (
+  <div className="absolute top-8 left-1/2 transform -translate-x-1/2 bg-blue-500 py-2 px-4 rounded-md shadow-md z-50">
+    <span className="text-sm font-medium text-white">Processing...</span>
+  </div>
+)}
+
         <div className='grid grid-cols-1 md:grid-cols-2'>
           <div className='col-span-1'>
             <form className='my-auto p-0 text-start' method="POST" onSubmit={handleSubmit}>
