@@ -170,7 +170,7 @@ export async function POST(request) {
     const tokenPayload = { name, email, password, imageUrl, verificationCode };
     const token = jwt.sign(tokenPayload, secretKey, { expiresIn: '10m' });
 
-    sendVerificationEmail(email, verificationCode).catch((error) => console.error('Error sending verification code:', error));
+    await sendVerificationEmail(email, verificationCode);
 
     const response = new NextResponse(JSON.stringify({
       message: "Signup successful, please check your email for the token containing the verification code",

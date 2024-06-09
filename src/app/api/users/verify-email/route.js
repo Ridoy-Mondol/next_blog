@@ -288,7 +288,7 @@ export async function POST(request) {
 
         const verificationCode = await generateVerificationCode();
 
-        sendVerificationEmail(email, verificationCode).catch((error) => console.error('Error sending reset code:', error));
+        await sendVerificationEmail(email, verificationCode);
 
         return new NextResponse(JSON.stringify({
             message: "Reset code sent successfully",
