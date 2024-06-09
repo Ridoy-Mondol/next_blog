@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
 
 const secretKey = process.env.JWT_SECRET_KEY;
+const code = Math.floor(100000 + Math.random() * 900000);
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -15,7 +16,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-async function sendVerificationEmail(email, code) {
+async function sendVerificationEmail(email) {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
@@ -109,9 +110,9 @@ async function sendVerificationEmail(email, code) {
   await transporter.sendMail(mailOptions);
 }
 
-async function generateVerificationCode() {
-  return Math.floor(100000 + Math.random() * 900000);
-}
+// async function generateVerificationCode() {
+//   return Math.floor(100000 + Math.random() * 900000);
+// }
 
 async function uploadToCloudinary(buffer, fileName, mimeType) {
   return new Promise((resolve, reject) => {
@@ -165,12 +166,12 @@ export async function POST(request) {
       }), { status: 409 });
     }
 
-    const verificationCode = await generateVerificationCode();
+    // const verificationCode = await generateVerificationCode();
 
-    const tokenPayload = { name, email, password, imageUrl, verificationCode };
+    const tokenPayload = { name, email, password, imageUrl, code };
     const token = jwt.sign(tokenPayload, secretKey, { expiresIn: '10m' });
 
-    await sendVerificationEmail(email, verificationCode);
+    sendVerificationEmail(email);
 
     const response = new NextResponse(JSON.stringify({
       message: "Signup successful, please check your email for the token containing the verification code",

@@ -22,12 +22,12 @@ export async function POST(request) {
       throw new Error('Session expired, please try again');
     }
 
-    const { name, email, password, imageUrl, verificationCode } = jwt.verify(Verifytoken, secretKey);
+    const { name, email, password, imageUrl, code } = jwt.verify(Verifytoken, secretKey);
 
 
     const storedVerificationCode = parseInt(ClientVerificationCode, 10);
 
-    if (verificationCode !== storedVerificationCode) {
+    if (code !== storedVerificationCode) {
       cloudinary.uploader.destroy(imageUrl);
       return new NextResponse(JSON.stringify({
         message: "Verification code does not match",

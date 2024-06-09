@@ -167,7 +167,7 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-async function sendVerificationEmail(email, verificationCode) {
+async function sendVerificationEmail(email) {
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to: email,
@@ -243,7 +243,7 @@ async function sendVerificationEmail(email, verificationCode) {
             <p>Hi,</p>
             <p>You've requested to reset your password for Next-Blog. Please use the verification code below to proceed:</p>
             <div class="verification-code-container">
-                <span class="verification-code">${verificationCode}</span>
+                <span class="verification-code">${code}</span>
             </div>
             <p>Please note that this verification code should not be shared with anyone.</p>
             <p>If you didn't request this password reset, you can safely ignore this email.</p>
@@ -265,9 +265,9 @@ async function sendVerificationEmail(email, verificationCode) {
     }
 }
 
-async function generateVerificationCode() {
-    return code;
-}
+// async function generateVerificationCode() {
+//     return code;
+// }
 
 export async function POST(request) {
     try {
@@ -286,14 +286,14 @@ export async function POST(request) {
             });
         }
 
-        const verificationCode = await generateVerificationCode();
+        // const verificationCode = await generateVerificationCode();
 
-        await sendVerificationEmail(email, verificationCode);
+        sendVerificationEmail(email);
 
         return new NextResponse(JSON.stringify({
             message: "Reset code sent successfully",
             success: true,
-            verificationCode,
+            code,
         }), {
             status: 200,
         });

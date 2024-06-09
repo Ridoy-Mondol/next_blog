@@ -25,7 +25,7 @@ export default function ResetPassword() {
       const data = await response.json();
       if (data.success) {
         setStep(2);
-        setResetCodeSent(data.verificationCode);
+        setResetCodeSent(data.code);
         toast.success('Verification code sent to your email');
       } else {
         toast.error(data.message);
