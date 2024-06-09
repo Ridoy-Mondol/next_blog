@@ -60,15 +60,19 @@ export default function ResetPassword() {
 
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
-    if (!password || !confirmPassword) {
-      toast.error("Password fields cannot be empty");
+    if (!password) {
+      toast.error("Password field cannot be empty");
       return;
     }
-    if (password.length < 6) {
+    if (password.length > 0 && password.length < 6) {
       toast.error("Password must be at least 6 characters");
       return;
     }
-    if (password !== confirmPassword) {
+    if (!confirmPassword) {
+      toast.error("Confirm password field cannot be empty");
+      return;
+    }
+    if (confirmPassword && password !== confirmPassword) {
       toast.error("Passwords do not match");
       return;
     }
@@ -81,7 +85,9 @@ export default function ResetPassword() {
       const data = await response.json();
       if (data.success) {
         toast.success(data.message);
-        setStep(1);
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1000); 
       } else {
         toast.error(data.message);
       }
