@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
 
 const secretKey = process.env.JWT_SECRET_KEY;
-const code = Math.floor(100000 + Math.random() * 900000);
+
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -15,7 +15,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-async function sendVerificationEmail(email) {
+async function sendVerificationEmail(email, code) {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
@@ -92,6 +92,7 @@ async function sendVerificationEmail(email) {
                   <div class="verification-code-container">
                       <span class="verification-code">${code}</span>
                   </div>
+                  <p>Please note that this verification code is valid for 10 minutes and should not be shared with anyone.</p>
                   <p>If you did not request this code, please ignore this email.</p>
                   <p>Best regards,<br>Ridoy Monol, Owner of Next-Blog</p>
               </div>
@@ -108,7 +109,7 @@ async function sendVerificationEmail(email) {
 }
 
 async function generateVerificationCode() {
-  return code;
+  return Math.floor(100000 + Math.random() * 900000);
 }
 
 async function uploadToCloudinary(buffer, fileName, mimeType) {
@@ -157,7 +158,10 @@ export async function POST(request) {
     const userExist = await signupUser.findOne({ email });
 
     if (userExist) {
-      return new NextResponse(JSON.stringify({ message: "User already exists", success: false }), { status: 409 });
+      return new NextResponse(JSON.stringify({ 
+        message: "User already exists", 
+        success: false 
+      }), { status: 409 });
     }
 
     const verificationCode = await generateVerificationCode();
@@ -165,7 +169,7 @@ export async function POST(request) {
     const tokenPayload = { name, email, password, imageUrl, verificationCode };
     const token = jwt.sign(tokenPayload, secretKey, { expiresIn: '10m' });
 
-    await sendVerificationEmail(email);
+    sendVerificationEmail(email, verificationCode);
 
     const response = new NextResponse(JSON.stringify({
       message: "Signup successful, please check your email for the token containing the verification code",
@@ -173,7 +177,7 @@ export async function POST(request) {
       success: true,
     }));
 
-    response.cookies.set('token', token , { maxAge: 600 });
+    response.cookies.set('token', token, { maxAge: 600 });
     return response;
 
   } catch (error) {
@@ -181,4 +185,3 @@ export async function POST(request) {
     return new NextResponse(JSON.stringify({ message: "Signup failed", success: false }), { status: 500 });
   }
 }
-

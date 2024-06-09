@@ -195,7 +195,7 @@ const Registration = () => {
                 <span className='reg-bold'>
                   Already have an account?
                 </span>
-                <Link href="/login" className='text-decoration-none redirect'> Login now</Link>
+                <Link href="/login" className='hover:underline redirect'> Login now</Link>
               </p>
             </form>
           </div>

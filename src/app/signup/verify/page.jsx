@@ -8,7 +8,7 @@ export default function Verify() {
 
   const handleVerification = async () => {
     try {
-      const response = await fetch('/api/users/verify-email', {
+      const response = await fetch('/api/users/verify-user', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ export default function Verify() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-400 via-green-400 to-blue-400">
-      <div className="max-w-md w-full md:max-w-90vw bg-white shadow-lg rounded-lg p-6 animate-fade-in">
+      <div className="max-w-md w-full md:max-w-90vw bg-white shadow-lg rounded-lg p-6 animate-fade-in verify-code">
         <h1 className="text-3xl font-semibold mb-4 text-center text-gray-800">Verification</h1>
         <form onSubmit={handleSubmit} className="p-0">
           <input
@@ -58,7 +58,7 @@ export default function Verify() {
           </button>
           <p className="text-gray-700 mb-0">
             <span className="mr-1">Back to</span>
-            <Link href="/signup" className="text-indigo-500 hover:text-indigo-700 transition-colors duration-300">Signup</Link>
+            <Link href="/signup" className="text-indigo-500 hover:text-indigo-700 transition-colors duration-300 redirect">Signup</Link>
           </p>
         </form>
       </div>

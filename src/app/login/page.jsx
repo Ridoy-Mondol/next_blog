@@ -122,12 +122,15 @@ const Login = () => {
                             </label>
 
                             <button type="submit" className="btn-1 reg-btn">Log in</button>
-
+                            
                             <p className="mt-3">
+                                <Link href="/login/reset_password" className="hover:underline redirect">Forgot Password?</Link>
+                            </p>
+                            <p className="mt-2">
                                 <span className="reg-bold">
                                 Don&apos;t have an account?
                                 </span>
-                                <Link href="/signup" className="text-decoration-none redirect"> Signup Now</Link>
+                                <Link href="/signup" className="redirect hover:underline"> Signup Now</Link>
                             </p>
                         </form>
                     </div>

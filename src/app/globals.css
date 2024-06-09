@@ -187,6 +187,19 @@ form{
   color: #222222;
   font-size: 0.8rem;
 }
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out;
+}
 
 
 /* Navbar  */
@@ -837,7 +850,11 @@ form{
   height: 2.4rem;
   margin-right: 1rem;
 }
-
+.verify-code {
+  width: 90vw;
+  padding-left: 4%;
+  padding-right: 4%;
+}
 
   /* navbar */
   .nav-link:hover {
@@ -1324,26 +1341,4 @@ form{
   }
 } 
 
-
-
-
-
-
-
-
-
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in {
-  animation: fade-in 0.5s ease-out;
-}
 
