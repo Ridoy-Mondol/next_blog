@@ -75,6 +75,29 @@ body, .home-page {
   }
 }
 
+/* processing spinner */
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #4A90E2;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+}
+.spinner-2 {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-left-color: #ffffff;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 
 
 /* registration */
@@ -770,7 +793,7 @@ form{
   z-index: 1;
 }
 .update-profile-name {
-  top: 34%;
+  top: 22rem;
 }
 .update-name h1 {
    color: #222222;
@@ -1094,7 +1117,7 @@ form{
   top: 45%;
 }
 .update-profile-name {
-  top: 15%;
+  top: 16rem;
 }
 .update-name h1 {
    width: 90%;
@@ -1312,7 +1335,7 @@ form{
   top: 51%;
 }
 .update-profile-name {
-  top: 23%;
+  top: 17rem;
 }
 .update-name h1 {
    width: 90%;
@@ -1340,5 +1363,7 @@ form{
     display: block;
   }
 } 
+
+
 
 

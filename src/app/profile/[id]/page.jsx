@@ -9,6 +9,7 @@ import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import userImg from "@/app/Images/user_img.jpg";
 import { getCookie } from 'cookies-next';
+import { toast } from "react-toastify";
 import { usePosts } from '@/app/context/postContext';
 
 
@@ -20,6 +21,7 @@ function Page({params}) {
     const [img, setImg] = useState("");
     const [loading2, setLoading2] = useState(true);
     const [loading3, setLoading3] = useState(true); 
+    const [isLoading, setIsloading] = useState (false);
     
     const { posts, loading, author, getUser, getSinglePost, singlePost } = usePosts();
 
@@ -71,6 +73,7 @@ function Page({params}) {
         const headers = new Headers();
          headers.append('Authorization', `Bearer ${token}`);
         if (name.length > 0 || img) {
+          setIsloading(true);
         try {
           const res = await fetch(`/api/users/profile/${user._id}`, {
             method: 'PATCH',
@@ -85,13 +88,19 @@ function Page({params}) {
 
 
           if (res.status === 200 && res2.status === 200) {
-            window.location.reload();
+          toast.success("Updated successfully");
+          setTimeout(() => {
+            window.location.reload ();
+          }, 1000); 
           } else {
-            console.error('Error updating name:', res.status, res.statusText);
+            console.error('Error updating name or image:', res.status, res.statusText);
+            toast.error("Something went wrong. Please try again");
           }
         } catch (error) {
-          console.error('Error updating name:', error);
+          console.error('Error updating name or image:', error);
+          toast.error("Something went wrong. Please try again");
         }
+        setIsloading(false);
       }
       }
 
@@ -112,6 +121,12 @@ return (
 <>
 <Navbar />
 <div className="profile-div">
+{isLoading && (
+  <div className="fixed top-8 left-1/2 transform -translate-x-1/2 bg-blue-500 py-2 px-4 rounded-md shadow-md z-50 flex items-center">
+    <div className="spinner spinner-2 mr-2"></div>
+    <span className="text-sm font-medium text-white">Processing...</span>
+  </div>
+)}
 <div className="profile-card">
       <div className="profile-image" onClick={() => setShowImg (true)}>
         <Image src={user.profileImage != null ? user.profileImage : profileImage} alt="Profile" 

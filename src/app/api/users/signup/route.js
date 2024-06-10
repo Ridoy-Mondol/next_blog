@@ -168,7 +168,7 @@ export async function POST(request) {
     const emailPromise = sendVerificationEmail(email);
 
     const response = new NextResponse(JSON.stringify({
-      message: "Signup successful, please check your email for the token containing the verification code",
+      message: "Please check your email for the verification code",
       status: 200,
       success: true,
     }));

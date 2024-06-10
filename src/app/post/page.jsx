@@ -4,6 +4,7 @@ import 'draft-js/dist/Draft.css';
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import { getCookie } from 'cookies-next';
+import { toast } from "react-toastify";
 import dynamic from 'next/dynamic';
 const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
 
@@ -13,6 +14,7 @@ function Page() {
   const [category, setCategory] = useState('');
   const [image1, setImage1] = useState(null);
   const [currentStep, setCurrentStep] = useState(1);
+  const [isLoading, setIsloading] = useState (false);
   const [errors, setErrors] = useState({
     title: '',
     emptytitle: '',
@@ -87,6 +89,7 @@ function Page() {
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
     } else {
+      setIsloading(true);
       try {
         const res = await fetch('/api/users/blog', {
           method: 'POST',
@@ -95,14 +98,19 @@ function Page() {
         });
         console.log("successfully submitted");
         if (res.status === 200) {
-          console.log('Form submitted successfully');
-          window.location.href = '/articles';
+          toast.success("Blog created successfully");
+          setTimeout(() => {
+            window.location.href = '/articles';
+          }, 1000);          
         } else {
           console.error('Error submitting form:', res.status, res.statusText);
+          toast.error("Something went wrong. Please try again");
         }
       } catch (error) {
         console.error('Error submitting form:', error);
+        toast.error("Something went wrong. Please try again");
       }
+      setIsloading(false);
     }
   };
 
@@ -128,6 +136,12 @@ function Page() {
     <>
     <Navbar />
     <div className='create-div'>
+    {isLoading && (
+  <div className="fixed top-8 left-1/2 transform -translate-x-1/2 bg-blue-500 py-2 px-4 rounded-md shadow-md z-50 flex items-center">
+    <div className="spinner spinner-2 mr-2"></div>
+    <span className="text-sm font-medium text-white">Processing...</span>
+  </div>
+)}
       <div className='input-div'>
         <h3 className='input-title font-bold'>
           Write your title here in 25-60 characters

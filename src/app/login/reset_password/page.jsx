@@ -100,10 +100,12 @@ export default function ResetPassword() {
   return (
     <div className="flex items-center justify-center h-screen bg-gradient-to-r from-indigo-500 to-cyan-500">
       {isLoading && (
-          <div className="absolute top-12 left-1/2 transform -translate-x-1/2 bg-white py-2 px-4 rounded-md shadow-md z-50">
-            <span className="text-sm font-medium text-gray-800">Processing...</span>
-          </div>
-        )}
+  <div className="absolute top-12 left-1/2 transform -translate-x-1/2 bg-white py-2 px-4 rounded-md shadow-md z-50 flex items-center">
+    <div className="spinner mr-2"></div>
+    <span className="text-sm font-medium text-gray-800">Processing...</span>
+  </div>
+)}
+
       <div className="bg-white py-8 px-6 rounded-lg shadow-lg w-full max-w-md animate-fade-in verify-code relative">
         <h1 className="text-2xl font-bold mb-4">Reset Password</h1>
         {step === 1 && (

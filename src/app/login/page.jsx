@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 const Login = () => {
     const [error, setError] = useState({});
     const [isChecked, setIsChecked] = useState(false);
+    const [isLoading, setIsloading] = useState (false);
     const [value, setValue] = useState({
         email: "",
         password: "",
@@ -33,6 +34,7 @@ const Login = () => {
         const formError = validate();
         setError(formError);
         if (Object.keys(formError).length === 0 && isChecked) {
+            setIsloading(true);
             try {
                 const response = await fetch("/api/users/login", {
                     method: "POST",
@@ -45,18 +47,22 @@ const Login = () => {
                     if (res_data.status === 200) {
                         setCookie('token2', res_data.token, { maxAge: 10 * 24 * 60 * 60 });
                         setError({});
-                        window.location.href = '/';
+                        toast.success("Log in succcessfull");
+                        setTimeout(() => {
+                          window.location.href = '/';
+                        }, 1000);
                     } else {
                         toast.error(res_data.message);
                     }
                 } else {
                     const responseData = await response.json();
                     toast.error(responseData.message);
-
                 }
             } catch (error) {
                 console.error("Error submitting form:", error);
+                toast.error("Something went wrong. Please try again");
             }
+            setIsloading(false);
         }
     };
 
@@ -73,6 +79,12 @@ const Login = () => {
 
     return (
         <div className="register-div">
+            {isLoading && (
+  <div className="fixed top-8 left-1/2 transform -translate-x-1/2 bg-blue-500 py-2 px-4 rounded-md shadow-md z-50 flex items-center">
+    <div className="spinner spinner-2 mr-2"></div>
+    <span className="text-sm font-medium text-white">Processing...</span>
+  </div>
+)}
             <div className="text-center form reg-form">
                 <div className="grid grid-cols-1 md:grid-cols-2">
                     <div className="md:col-span-1 flex justify-center items-center">

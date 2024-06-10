@@ -5,8 +5,10 @@ import { toast } from 'react-toastify';
 
 export default function Verify() {
   const [verificationCode, setVerificationCode] = useState('');
+  const [isLoading, setIsloading] = useState (false);
 
   const handleVerification = async () => {
+    setIsloading(true);
     try {
       const response = await fetch('/api/users/verify-user', {
         method: 'POST',
@@ -20,13 +22,16 @@ export default function Verify() {
 
       if (response.ok) {
         toast.success(data.message);
-        window.location.href = '/';
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 1000);
       } else {
         toast.error(data.message);
       }
     } catch (error) {
       toast.error('Verification failed');
     }
+    setIsloading(false);
   };
 
   const handleSubmit = (e) => {
@@ -40,6 +45,12 @@ export default function Verify() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-400 via-green-400 to-blue-400">
+      {isLoading && (
+  <div className="fixed top-8 left-1/2 transform -translate-x-1/2 bg-blue-500 py-2 px-4 rounded-md shadow-md z-50 flex items-center">
+    <div className="spinner spinner-2 mr-2"></div>
+    <span className="text-sm font-medium text-white">Processing...</span>
+  </div>
+)}
       <div className="max-w-md w-full md:max-w-90vw bg-white shadow-lg rounded-lg p-6 animate-fade-in verify-code">
         <h1 className="text-3xl font-semibold mb-4 text-center text-gray-800">Verification</h1>
         <form onSubmit={handleSubmit} className="p-0">

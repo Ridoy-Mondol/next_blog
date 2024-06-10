@@ -66,7 +66,9 @@ const Registration = () => {
           const res_data = await response.json();
           if (res_data.success) {
             toast.success(res_data.message);
-            window.location.href = '/signup/verify';
+            setTimeout(() => {
+              window.location.href = '/signup/verify';
+            }, 1000); 
           } else {
             toast.error(res_data.message);
           }
@@ -109,7 +111,8 @@ const Registration = () => {
     <div className='register-div'>
       <div className="text-center form reg-form">
       {isLoading && (
-  <div className="absolute top-8 left-1/2 transform -translate-x-1/2 bg-blue-500 py-2 px-4 rounded-md shadow-md z-50">
+  <div className="absolute top-8 left-1/2 transform -translate-x-1/2 bg-blue-500 py-2 px-4 rounded-md shadow-md z-50 flex items-center">
+    <div className="spinner spinner-2 mr-2"></div>
     <span className="text-sm font-medium text-white">Processing...</span>
   </div>
 )}
