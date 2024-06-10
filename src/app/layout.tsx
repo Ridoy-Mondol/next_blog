@@ -8,6 +8,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 const inter = Inter({ subsets: ["latin"] });
 import { PostsProvider } from "@/app/context/postContext";
+import SessionProvider from "@/HOC/sessionProvider";
 // import 'tailwindcss/tailwind.css';
 
 export const metadata: Metadata = {
@@ -23,9 +24,14 @@ export default function RootLayout({
 
   return (
     <html lang="en">
+      <head>
+      <meta name="google-site-verification" content="JE47Asf3KQXewJRQ1KeZPIOF5j4IDDilDi62mFd0-pg" />
+      </head>
       <body className={`body ${inter.className}`}>
        <PostsProvider>
+        <SessionProvider>
         {children}
+        </SessionProvider>
         <ToastContainer 
           position="top-center"
           autoClose={3000}
