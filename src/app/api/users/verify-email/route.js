@@ -131,7 +131,7 @@ export async function POST(request) {
             return new NextResponse(JSON.stringify({
                 message: "Can't reset password. This account is created with google.",
                 success: false,
-            }))
+            }));
         }
 
         // const verificationCode = await generateVerificationCode();

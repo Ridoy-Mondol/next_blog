@@ -12,6 +12,13 @@ export async function POST(request) {
         await connectDB();
         const userInfo = await signupUser.findOne({ email: email });
 
+        if (userInfo.password === null) {
+            return new NextResponse(JSON.stringify({
+                message: "Can't login. This account is created with google.",
+                success: false,
+            }));
+        }
+
         if (userInfo) {
             const isPasswordMatch = await bcrypt.compare(password, userInfo.password);
 

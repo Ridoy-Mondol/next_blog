@@ -15,6 +15,12 @@ export async function POST(request) {
               success: false 
             }), { status: 404 });
           }
+          if (userExist.password !== null) {
+            return new NextResponse(JSON.stringify({
+              message: "Can't login. This account is not created with google.",
+              success: false,
+          }));
+          }
 
           const tokenPayload = { userId: userExist._id };
           const token = jwt.sign(tokenPayload, secretKey, { expiresIn: '10d' });
