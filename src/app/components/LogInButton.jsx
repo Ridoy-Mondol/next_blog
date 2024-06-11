@@ -9,7 +9,9 @@ function Page({ props }) {
   const { data: session } = useSession();
 
   const handleLogIn = async () => {
-    await signIn('google');
+    await signIn('google', {
+      callbackUrl: '/login',
+    });
 
     if (session) {
       try {
