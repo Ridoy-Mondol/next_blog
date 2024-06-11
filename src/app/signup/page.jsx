@@ -6,6 +6,7 @@ import img from "@/app/Images/signup-image.jpg";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faEnvelope, faLock, faUnlockAlt, faImage } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
+import GoogleSignUpButton from "@/app/components/SignupButton";
 
 const Registration = () => {
   const [error, setError] = useState({});
@@ -202,15 +203,16 @@ const Registration = () => {
                 <span className="checkmark"></span>
               </label>
 
-              <button type="submit" className="reg-btn">REGISTER NOW</button>
-
-              <p className='mt-3'>
+              <button type="submit" className="reg-btn">SIGN UP NOW</button>
+              </form>
+              <p className='text-center font-bold text-lg my-1 w-[85%]'>or</p>
+              <GoogleSignUpButton props="SIGN UP WITH GOOGLE"/>
+              <p className='mt-3 text-start'>
                 <span className='reg-bold'>
                   Already have an account?
                 </span>
                 <Link href="/login" className='hover:underline redirect'> Login now</Link>
               </p>
-            </form>
           </div>
 
           <div className='col-span-1 flex items-center'>

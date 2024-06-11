@@ -114,7 +114,7 @@ form{
 }
 .reg-form {
   width: 60%;
-  height: 85vh;
+  height: 90vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -130,10 +130,10 @@ form{
 }
 .reg-input {
   width: 85%;
-  height: 2.95rem;
+  height: 2.35rem;
   padding: 0.2rem 0.5rem;
   outline: none;
-  margin-top: 1.2rem;
+  margin-top: 0.8rem;
   border: none;
   border-bottom: 1px solid black;
   padding-left: 1.5rem;
@@ -146,14 +146,14 @@ form{
 .reg-icon {
   color: #222222;
   position: absolute;
-  top: 2.15rem;
+  top: 1.52rem;
   font-size: 0.8rem;
 }
 .reg-btn {
   background-color: #0084D6;
   margin-top: 1.2rem;
   border: none;
-  height: 3rem;
+  height: 2.75rem;
   color:#FFFFFF;
   font-size: 0.875rem;
   width: 85%;
@@ -188,8 +188,8 @@ form{
   color: #fff;
   cursor: pointer;
   width: 85%;
-  height: 2.95rem;
-  margin-top: 1.2rem;
+  height: 2.35rem;
+  margin-top: 0.8rem;
   border-bottom: 1px solid black;
   font-size: 0.95rem;
 }

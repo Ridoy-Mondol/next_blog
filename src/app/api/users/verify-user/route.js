@@ -67,7 +67,7 @@ export async function POST(request) {
     return response;
   } catch (error) {
     console.error('Error verifying email:', error);
-    return new NextResponse(JSON.stringify({ message: error.message || "Invalid or expired token", success: false }), { status: 400 });
+    return new NextResponse(JSON.stringify({ message: error.message || "Session expired", success: false }), { status: 400 });
   }
 }
 

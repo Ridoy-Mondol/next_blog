@@ -11,14 +11,6 @@ export async function PATCH (request) {
      await connectDB();
      const userExist = await signupUser.findOne({ email });
 
-    //  if (!userExist) {
-    //     return new NextResponse(JSON.stringify({
-    //         message: "User not exist",
-    //         success: false,
-    //     }), {
-    //         status: 404,
-    //     })
-    //  }
     const saltRound = 10;
      const hashesdPassword = await bcrypt.hash(password, saltRound);
     await signupUser.updateOne(

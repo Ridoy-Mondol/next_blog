@@ -127,6 +127,12 @@ export async function POST(request) {
                 status: 404,
             });
         }
+        if (userExist.password === null) {
+            return new NextResponse(JSON.stringify({
+                message: "Can't reset password. This account is created with google.",
+                success: false,
+            }))
+        }
 
         // const verificationCode = await generateVerificationCode();
 

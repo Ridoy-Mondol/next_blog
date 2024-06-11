@@ -6,6 +6,7 @@ import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { deleteCookie } from 'cookies-next';
+import { signOut } from "next-auth/react";
 
 function Navbar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -25,6 +26,9 @@ function Navbar() {
 
   const logout = () => {
     deleteCookie('token2');
+    deleteCookie('next-auth.callback-url');
+    deleteCookie('next-auth.csrf-token');
+    deleteCookie('next-auth.session-token');
     router.push('/login');
   };
 

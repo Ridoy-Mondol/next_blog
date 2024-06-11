@@ -7,6 +7,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
 import { setCookie } from 'cookies-next';
 import { toast } from 'react-toastify';
+import GoogleLogInButton from "@/app/components/LogInButton";
+
 
 const Login = () => {
     const [error, setError] = useState({});
@@ -133,18 +135,20 @@ const Login = () => {
                                 <span className="checkmark"></span>
                             </label>
 
-                            <button type="submit" className="btn-1 reg-btn">Log in</button>
+                            <button type="submit" className="btn-1 reg-btn">LOG IN</button>
+                            </form>
+                            <p className='text-center font-bold text-lg my-1 w-[85%]'>or</p>
+                            <GoogleLogInButton props = "LOG IN WITH GOOGLE"/>
                             
-                            <p className="mt-3">
+                            <p className="mt-3 text-start">
                                 <Link href="/login/reset_password" className="hover:underline redirect">Forgot Password?</Link>
                             </p>
-                            <p className="mt-2">
+                            <p className="mt-2 text-start">
                                 <span className="reg-bold">
                                 Don&apos;t have an account?
                                 </span>
                                 <Link href="/signup" className="redirect hover:underline"> Signup Now</Link>
                             </p>
-                        </form>
                     </div>
                 </div>
             </div>
