@@ -35,7 +35,7 @@ const Callback = () => {
             } else {
                 toast.error(data.message);
                 setTimeout(() => {
-                    window.location.href = '/login';
+                    window.location.href = '/signup';
                 }, 1000);
             }
             

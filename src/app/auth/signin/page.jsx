@@ -33,7 +33,7 @@ const Callback = () => {
             } else {
               toast.error(data.message);
               setTimeout(() => {
-                window.location.href = '/signup';
+                window.location.href = '/login';
             }, 1000);
             }
           } catch (error) {

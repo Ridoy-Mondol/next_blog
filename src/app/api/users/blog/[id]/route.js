@@ -4,29 +4,11 @@ import BlogPost from '@/models/blogModel';
 import user from "@/models/signupModel";
 import cloudinary from '@/utils/cloudinary';
 import {redisClient, connectRedis} from "@/utils/redis"
-import { DateTime } from 'luxon';
 import jwt from 'jsonwebtoken';
 
 
 const secretKey = process.env.JWT_SECRET_KEY;
 
-
-// export async function GET(request, content) {
-//   let result = {};
-//   let success = true;
-//   try {
-//     await connectDB();
-//     const id = content.params.id;
-//     result = await BlogPost.findOne({ _id: id });
-//     if (!result) {
-//       success = false;
-//     }
-//   } catch (error) {
-//     console.error('Error fetching blog post:', error);
-//     success = false;
-//   }
-//   return NextResponse.json({ result, success });
-// }
 
 export async function GET(request, content) {
   let result = {};
@@ -58,11 +40,16 @@ export async function GET(request, content) {
 export async function DELETE(request, content) {
   const id = content.params.id;
   const token = request.headers.get('Authorization')?.split(' ')[1];
-  let success;
   try {
      await connectDB();
      const decodedToken = jwt.verify(token, secretKey);
      const userId = decodedToken.userId;
+
+     const blogPost = await BlogPost.findOne({ _id: id, 'user.author': userId });
+    if (blogPost && blogPost.profileImage) {
+      await cloudinary.uploader.destroy(blogPost.profileImage);
+    }
+
      await BlogPost.deleteOne({ _id: id, 'user.author': userId });
      await redisClient.del('blog_posts');
      await redisClient.del(`single_blog_posts${id}`);
@@ -88,6 +75,8 @@ export async function PATCH(request, content) {
     const userId = decodedToken.userId;
     const author = await user.findOne({_id: userId});
 
+    const blogPosts = await BlogPost.find({ _id: { $in: ids }, 'user.author': userId });
+
     if (data.has('title')) {
       updates.title = data.get('title');
       success = true;
@@ -101,6 +90,7 @@ export async function PATCH(request, content) {
       success = true;
     }
     if (data.has('image1')) {
+      await cloudinary.uploader.destroy(blogPosts.profileImage);
       const image1File = data.get('image1');
       const buffer1 = await image1File.arrayBuffer();
       const image1 = Buffer.from(new Uint8Array(buffer1));
@@ -117,8 +107,6 @@ export async function PATCH(request, content) {
       };
       success = true;
     }
-
-    updates.date = DateTime.now().toLocaleString({ month: '2-digit', day: '2-digit', year: '2-digit' });
 
     if (success) {
       await connectDB();

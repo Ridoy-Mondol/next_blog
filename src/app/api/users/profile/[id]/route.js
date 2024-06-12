@@ -71,6 +71,10 @@ export async function PATCH(request, content) {
     }
 
     if (data.has('profileImage')) {
+      const user = await signupUser.findOne({ _id: userId });
+      if (user.profileImage) {
+        await cloudinary.uploader.destroy(user.profileImage);
+      }
       const imageFile = data.get('profileImage');
       const buffer = await imageFile.arrayBuffer();
       const image = Buffer.from(new Uint8Array(buffer));
