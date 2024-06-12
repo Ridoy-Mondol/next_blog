@@ -199,7 +199,7 @@ function Page({params}) {
                               {val.title}  
                             </h3>
                             <div className="flex align-items-center justify-start space-x-2 text-xs popular-date text-white">
-                            <Image src={val.user?.image2 != null ? val.user.image2 : userImg} alt="" className="popular-user-img"
+                            <Image src={val.user?.profileImage != null ? val.user.profileImage : userImg} alt="" className="popular-user-img"
                             width='100' 
                             height='100'
                             />
