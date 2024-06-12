@@ -42,10 +42,8 @@ const Login = () => {
                     method: "POST",
                     body: JSON.stringify(value),
                 });
-                 console.log("res", response.status);
                 if (response.ok) {
                     const res_data = await response.json();
-                    console.log("res_data", res_data);
                     if (res_data.status === 200) {
                         setCookie('token2', res_data.token, { maxAge: 10 * 24 * 60 * 60 });
                         setError({});

@@ -9,36 +9,33 @@ const Callback = () => {
   useEffect(() => {
     const sendSessionData = async () => {
       if (status === 'authenticated' && session) {
-        const signingUp = sessionStorage.getItem('signingUp');
+        const signIn = sessionStorage.getItem('signIn');
         
-        if (signingUp === 'true') {
-          sessionStorage.removeItem('signingUp');
+        if (signIn === 'true') {
+          sessionStorage.removeItem('signIn');
           
           try {
-            const response = await fetch('/api/users/googlesignup', {
+            const response = await fetch('/api/users/googleLogIn', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify({
-                name: session.user.name,
                 email: session.user.email,
-                image: session.user.image,
               }),
             });
-
+    
             const data = await response.json();
             if (data.success) {
               toast.success(data.message);
               setCookie('token2', data.token, { maxAge: 10 * 24 * 60 * 60 });
-              window.location.href = '/';
+                window.location.href = '/';
             } else {
-                toast.error(data.message);
-                setTimeout(() => {
-                    window.location.href = '/login';
-                }, 1000);
+              toast.error(data.message);
+              setTimeout(() => {
+                window.location.href = '/signup';
+            }, 1000);
             }
-            
           } catch (error) {
             console.error('Error sending session data:', error);
           }

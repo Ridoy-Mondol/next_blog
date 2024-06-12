@@ -12,6 +12,14 @@ export async function POST(request) {
         await connectDB();
         const userInfo = await signupUser.findOne({ email: email });
 
+        if (!userInfo) {
+            return NextResponse.json({
+                message: "Invalid Credentials",
+                status: 404,
+                body: JSON.stringify({ success: false })
+            });
+        }
+
         if (userInfo.password === null) {
             return new NextResponse(JSON.stringify({
                 message: "Can't login. This account is created with google.",
@@ -19,7 +27,6 @@ export async function POST(request) {
             }));
         }
 
-        if (userInfo) {
             const isPasswordMatch = await bcrypt.compare(password, userInfo.password);
 
             if (isPasswordMatch) {
@@ -41,13 +48,6 @@ export async function POST(request) {
                     body: JSON.stringify({ success: false })
                 });
             }
-        } else {
-            return NextResponse.json({
-                message: "Invalid Credentials",
-                status: 404,
-                body: JSON.stringify({ success: false })
-            });
-        }
     } catch (error) {
         console.error('Error during login:', error);
         return NextResponse.json({

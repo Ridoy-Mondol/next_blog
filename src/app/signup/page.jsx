@@ -79,7 +79,7 @@ const Registration = () => {
           throw new Error("Failed to submit the form");
         }
       } catch (error) {
-        console.error("Error submitting form:", error);
+        toast.error("Something went wrong.Please try again");
       }
       setIsLoading(false);
     }

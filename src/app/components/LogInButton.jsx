@@ -1,44 +1,15 @@
 import React from 'react';
-import { signIn, useSession } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 import googleLogo from '@/app/Images/google-logo.png';
 import Image from 'next/image';
-import { setCookie } from 'cookies-next';
-import { toast } from 'react-toastify';
 
 function Page({ props }) {
-  const { data: session } = useSession();
 
   const handleLogIn = async () => {
+    sessionStorage.setItem('signIn', 'true');
     await signIn('google', {
-      callbackUrl: '/login',
+      callbackUrl: '/auth/signin',
     });
-
-    if (session) {
-      try {
-        const response = await fetch('/api/users/googleLogIn', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: session.user.email,
-          }),
-        });
-
-        const data = await response.json();
-        if (data.success) {
-          toast.success(data.message);
-          setCookie('token2', data.token, { maxAge: 10 * 24 * 60 * 60 });
-          setTimeout(() => {
-            window.location.href = '/';
-          }, 1000);
-        } else {
-          toast.error(data.message);
-        }
-      } catch (error) {
-        console.error('Error sending session data:', error);
-      }
-    }
   };
 
   return (

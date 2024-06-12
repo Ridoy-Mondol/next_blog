@@ -144,13 +144,6 @@ export async function POST(request) {
     const password = data.get('password');
     const imagefile = data.get('image');
 
-    let imageUrl = null;
-
-    if (imagefile) {
-      const buffer = await imagefile.arrayBuffer();
-      const image = Buffer.from(new Uint8Array(buffer));
-      imageUrl = await uploadToCloudinary(image, imagefile.name, imagefile.type);
-    }
 
     await connectDB();
     const userExist = await signupUser.findOne({ email });
@@ -159,8 +152,17 @@ export async function POST(request) {
       return new NextResponse(JSON.stringify({ 
         message: "User already exists", 
         success: false 
-      }), { status: 409 });
+      }),);
     }
+
+    let imageUrl = null;
+
+    if (imagefile) {
+      const buffer = await imagefile.arrayBuffer();
+      const image = Buffer.from(new Uint8Array(buffer));
+      imageUrl = await uploadToCloudinary(image, imagefile.name, imagefile.type);
+    }
+
 
     const tokenPayload = { name, email, password, imageUrl, code };
     const token = jwt.sign(tokenPayload, secretKey, { expiresIn: '10m' });
@@ -179,6 +181,9 @@ export async function POST(request) {
 
   } catch (error) {
     console.error('Error during signup:', error);
-    return new NextResponse(JSON.stringify({ message: "Signup failed", success: false }), { status: 500 });
+    return new NextResponse(JSON.stringify({ 
+      message: "Signup failed", 
+      success: false }), 
+      { status: 500 });
   }
 }
