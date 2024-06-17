@@ -46,17 +46,15 @@ function Page() {
           headers: headers,
           body: formData,
         });
-        const data = await res.json();
-        const data2 = await res2.json();
-        if (data.success && data2.success) {
-          toast.success(data.message);
+
+        if (res.status === 200 || res2.status === 200) {
+          toast.success("Updated successfully");
           setTimeout(() => {
             window.location.reload ();
           }, 1000);
-        } 
-        if (!data.success || !data2.success) {
-          console.error('Error updating user info:', res.status, res.statusText);
-          toast.error(data.message);
+        } else {
+          console.error('Error updating name:', res.status, res.statusText);
+          toast.error("Something went wrong. Please try again");
         }
       } catch (error) {
         console.error('Error updating name:', error);

@@ -46,8 +46,8 @@ export async function DELETE(request, content) {
      const userId = decodedToken.userId;
 
      const blogPost = await BlogPost.findOne({ _id: id, 'user.author': userId });
-    if (blogPost && blogPost.image1) {
-      await cloudinary.uploader.destroy(blogPost.image1);
+    if (blogPost && blogPost.profileImage) {
+      await cloudinary.uploader.destroy(blogPost.profileImage);
     }
 
      await BlogPost.deleteOne({ _id: id, 'user.author': userId });
@@ -63,6 +63,7 @@ export async function DELETE(request, content) {
 
 
 export async function PATCH(request, content) {
+  let success = false;
   const id = content.params.id; 
   const ids = id.split(',').map(id => id);
 
@@ -72,35 +73,30 @@ export async function PATCH(request, content) {
     const token = request.headers.get('Authorization')?.split(' ')[1];
     const decodedToken = jwt.verify(token, secretKey);
     const userId = decodedToken.userId;
-    
-    if (!userId) {
-      return;
-    }
-
     const author = await user.findOne({_id: userId});
+
+    const blogPosts = await BlogPost.find({ _id: { $in: ids }, 'user.author': userId });
 
     if (data.has('title')) {
       updates.title = data.get('title');
+      success = true;
     }
     if (data.has('blog')) {
       updates.blog = data.get('blog');
+      success = true; 
     }
     if (data.has('category')) {
       updates.category = data.get('category');
+      success = true;
     }
     if (data.has('image1')) {
-      const blogPosts = await BlogPost.find({ _id: { $in: ids }, 'user.author': userId });
-      if (blogPosts.image1) {
-        const publicId = blogPosts.image1.split('/').pop().split('.')[0];
-        if (publicId) {
-          await cloudinary.uploader.destroy(publicId);
-        }
-      }
+      await cloudinary.uploader.destroy(blogPosts.profileImage);
       const image1File = data.get('image1');
       const buffer1 = await image1File.arrayBuffer();
       const image1 = Buffer.from(new Uint8Array(buffer1));
       const imageUrl1 = await uploadToCloudinary(image1, image1File.name, image1File.type);
       updates.image1 = imageUrl1;
+      success = true; 
     }
 
     if (author) {
@@ -109,35 +105,21 @@ export async function PATCH(request, content) {
         profileImage: author.profileImage ? author.profileImage : null,
         author: author._id
       };
+      success = true;
     }
 
+    if (success) {
       await connectDB();
-      const updatedPost = await BlogPost.updateMany({ _id: { $in: ids }, 'user.author': userId }, { $set: updates });
+      await BlogPost.updateMany({ _id: { $in: ids }, 'user.author': userId }, { $set: updates });
       await redisClient.del('blog_posts');
       await redisClient.del(`single_blog_posts${id}`);
-
-      if (!updatedPost) {
-        return new NextResponse(JSON.stringify({
-          success: false,
-          message: "Something went wrong. Please try again",
-        }), {
-          status: 500,
-        })
-      }
-      return new NextResponse(JSON.stringify({
-        success: true,
-        message: 'Updated successfully',
-      }), {
-        status: 200,
-      })
+      return NextResponse.json({ success });
+    } else {
+      return NextResponse.json({ success: false, message: 'No valid fields to update' });
+    }
   } catch (error) {
     console.error('Error updating post:', error);
-    return new NextResponse(JSON.stringify({
-      success: false,
-      message: "Something went wrong. Please try again",
-    }), {
-      status: 500,
-    })   
+    return NextResponse.json({ success: false, error: error.message });
   } 
 }
 
@@ -161,4 +143,3 @@ function uploadToCloudinary(buffer, fileName, mimeType) {
     stream.end(buffer);
   });
 }
-
