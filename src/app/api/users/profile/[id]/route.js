@@ -73,7 +73,10 @@ export async function PATCH(request, content) {
     if (data.has('profileImage')) {
       const user = await signupUser.findOne({ _id: userId });
       if (user.profileImage) {
-        await cloudinary.uploader.destroy(user.profileImage);
+        const publicId = user.profileImage.split('/').pop().split('.')[0];
+        if (publicId) {
+        await cloudinary.uploader.destroy(publicId);
+        }
       }
       const imageFile = data.get('profileImage');
       const buffer = await imageFile.arrayBuffer();
@@ -85,14 +88,29 @@ export async function PATCH(request, content) {
     const updatedUser = await signupUser.findOneAndUpdate({ _id: userId }, { $set: updates }, { new: true });
 
     if (!updatedUser) {
-      return NextResponse.json({ message: "User not found", success: false }, { status: 404 });
+       return new NextResponse(JSON.stringify({
+         message: "Something went wrong. Please try again",
+         success: false
+       }),
+       { status: 500 }
+      )
     }
-
     await redisClient.del(`profile_data_${id}`);
-    return NextResponse.json({ result: updatedUser, success: true });
+    return new NextResponse(JSON.stringify({
+      result: updatedUser,
+      message: "Updated successfully",
+      success: true
+    }),
+    { status: 200 }
+  )
   } catch (error) {
     console.error('Error updating user:', error);
-    return NextResponse.json({ message: "Error updating user", success: false }, { status: 500 });
+    return new NextResponse(JSON.stringify({
+      message: "Something went wrong. Please try again",
+      success: false 
+    }),
+    { status: 500 }
+  )
   }
 }
 
