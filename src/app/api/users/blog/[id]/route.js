@@ -74,7 +74,7 @@ export async function PATCH(request, content) {
     const userId = decodedToken.userId;
     
     if (!userId) {
-      return null;
+      return;
     }
 
     const author = await user.findOne({_id: userId});
