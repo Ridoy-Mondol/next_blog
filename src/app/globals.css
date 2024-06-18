@@ -414,7 +414,11 @@ form{
   border-bottom: 2px solid #495057;
   word-wrap: break-word;
   word-break: break-word;
-  hyphens: auto;
+  hyphens: auto; 
+  width: 100%;
+}
+.single-para-parent {
+  width: 100%!important;
 }
 .single-user-img {
   width: 2.5rem;

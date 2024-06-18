@@ -129,10 +129,10 @@ function Page({params}) {
               </div>
               </div>
               
-              <div className=''>
+              <div className='single-para-parent'>
               <div className='single-para' dangerouslySetInnerHTML={{ __html: singlePost?.blog }} />
               <div className='flex justify-between align-items-center pt-12 pb-16 text-xs'>
-                 <div className='flex align-items-center space-x-2'>
+                 <Link href = {`/profile/${singlePost?._id}`} className='flex align-items-center space-x-2'>
                     <Image src = {singlePost?.user?.profileImage != null ? singlePost?.user.profileImage : userImg} alt='' className='single-user-img'
                     width='100' 
                     height='100'
@@ -140,7 +140,7 @@ function Page({params}) {
                     <div>
                       <p className='font-bold single-author text-capitalize'>{singlePost?.user?.name}</p>
                     </div>
-                 </div>
+                 </Link>
 
                  <div className={`position-absolute list-none editpart2 d-flex flex-column justify-content-center space-y-4 ${(showbox) ? (author === singlePost?.user?.author ? "show-box" : "show-sm") : ""}`}>
 
