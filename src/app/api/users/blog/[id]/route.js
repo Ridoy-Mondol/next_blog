@@ -46,8 +46,8 @@ export async function DELETE(request, content) {
      const userId = decodedToken.userId;
 
      const blogPost = await BlogPost.findOne({ _id: id, 'user.author': userId });
-    if (blogPost && blogPost.profileImage) {
-      await cloudinary.uploader.destroy(blogPost.profileImage);
+    if (blogPost && blogPost.image1) {
+      await cloudinary.uploader.destroy(blogPost.image1);
     }
 
      await BlogPost.deleteOne({ _id: id, 'user.author': userId });
@@ -75,8 +75,6 @@ export async function PATCH(request, content) {
     const userId = decodedToken.userId;
     const author = await user.findOne({_id: userId});
 
-    const blogPosts = await BlogPost.find({ _id: { $in: ids }, 'user.author': userId });
-
     if (data.has('title')) {
       updates.title = data.get('title');
       success = true;
@@ -90,7 +88,11 @@ export async function PATCH(request, content) {
       success = true;
     }
     if (data.has('image1')) {
-      await cloudinary.uploader.destroy(blogPosts.profileImage);
+      const blogPosts = await BlogPost.find({ _id: { $in: ids }, 'user.author': userId });
+      if (blogPosts.image1) {
+        await cloudinary.uploader.destroy(user.image1);
+      }
+
       const image1File = data.get('image1');
       const buffer1 = await image1File.arrayBuffer();
       const image1 = Buffer.from(new Uint8Array(buffer1));
