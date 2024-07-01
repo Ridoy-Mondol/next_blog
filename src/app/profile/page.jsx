@@ -58,7 +58,7 @@ function Page() {
         }
       } catch (error) {
         console.error('Error updating name:', error);
-        toast.error("Something went wrong. Please try again");
+        toast.error("xyz");
       }
       setIsloading(false);
     }
