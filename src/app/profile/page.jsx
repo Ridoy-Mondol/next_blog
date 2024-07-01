@@ -25,44 +25,102 @@ function Page() {
     setName(user?.name || '');
   }, [user]);
 
+  // const updateInfo = async () => {
+  //   const formData = new FormData();
+  //   name && formData.append('name', name);
+  //   img && formData.append('profileImage', img);
+
+  //   const token = getCookie('token2');
+  //   const headers = new Headers();
+  //   headers.append('Authorization', `Bearer ${token}`);
+  //   if (name.length > 0 || img) {
+  //     setIsloading(true);
+  //     try {
+  //       const res = await fetch(`/api/users/profile/${author}`, {
+  //         method: 'PATCH',
+  //         headers: headers,
+  //         body: formData,
+  //       });
+  //       const res2 = await fetch(`/api/users/blog/${posts.map((post) => post._id)}`, {
+  //         method: 'PATCH',
+  //         headers: headers,
+  //         body: formData,
+  //       });
+
+  //       if (res.status === 200 || res2.status === 200) {
+  //         toast.success("Updated successfully");
+  //         setTimeout(() => {
+  //           window.location.reload ();
+  //         }, 1000);
+  //       } else {
+  //         console.error('Error updating name:', res.status, res.statusText);
+  //         toast.error("Something went wrong. Please try again");
+  //       }
+  //     } catch (error) {
+  //       console.error('Error updating name:', error);
+  //       toast.error("Something went wrong. Please try again");
+  //     }
+  //     setIsloading(false);
+  //   }
+  // }
+
   const updateInfo = async () => {
-    const formData = new FormData();
-    name && formData.append('name', name);
-    img && formData.append('profileImage', img);
-
-    const token = getCookie('token2');
-    const headers = new Headers();
-    headers.append('Authorization', `Bearer ${token}`);
-    if (name.length > 0 || img) {
-      setIsloading(true);
-      try {
-        const res = await fetch(`/api/users/profile/${author}`, {
-          method: 'PATCH',
-          headers: headers,
-          body: formData,
-        });
-        const res2 = await fetch(`/api/users/blog/${posts.map((post) => post._id)}`, {
-          method: 'PATCH',
-          headers: headers,
-          body: formData,
-        });
-
-        if (res.status === 200 || res2.status === 200) {
-          toast.success("Updated successfully");
-          setTimeout(() => {
-            window.location.reload ();
-          }, 1000);
-        } else {
-          console.error('Error updating name:', res.status, res.statusText);
-          toast.error("Something went wrong. Please try again");
-        }
-      } catch (error) {
-        console.error('Error updating name:', error);
-        toast.error("xyz");
+    try {
+      const formData = new FormData();
+      if (name) {
+        formData.append('name', name);
       }
-      setIsloading(false);
+      if (img) {
+        formData.append('profileImage', img);
+      }
+      const token = getCookie('token2');
+      if (!token) {
+        throw new Error("No token found");
+      }
+  
+      const headers = new Headers();
+      headers.append('Authorization', `Bearer ${token}`);
+  
+      if (name.length > 0 || img) {
+        setIsloading(true);
+  
+        try {
+          const res = await fetch(`/api/users/profile/${author}`, {
+            method: 'PATCH',
+            headers: headers,
+            body: formData,
+          });
+
+          const res2 = await fetch(`/api/users/blog/${posts.map((post) => post._id)}`, {
+            method: 'PATCH',
+            headers: headers,
+            body: formData,
+          });
+    
+          if (res.status === 200 || res2.status === 200) {
+            toast.success("Updated successfully");
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          } else {
+            console.error('Error updating name:', res.status, res.statusText);
+            toast.error("Something went wrong. Please try again");
+          }
+        } catch (fetchError) {
+          console.error('Fetch request error:', fetchError);
+          toast.error("Something went wrong. Please try again");
+        } finally {
+          setIsloading(false);
+        }
+      } else {
+        console.log("No data to update");
+      }
+    } catch (error) {
+      console.error('Error in updateInfo function:', error);
+      toast.error("Something went wrong. Please try again");
     }
-  }
+  };
+  
 
   if (loading || loading2) {
     return (
