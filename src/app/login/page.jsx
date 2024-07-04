@@ -103,6 +103,7 @@ const Login = () => {
                                     className="input reg-input"
                                     name="email"
                                     value={value.email}
+                                    autoComplete='off'
                                     onChange={InputValue}
                                 />
                             </div>
@@ -116,6 +117,7 @@ const Login = () => {
                                     className="input reg-input"
                                     name="password"
                                     value={value.password}
+                                    autoComplete='off'
                                     onChange={InputValue}
                                 />
                             </div>

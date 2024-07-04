@@ -115,6 +115,7 @@ export default function ResetPassword() {
               <input
                 type="email"
                 value={email}
+                autoComplete='off'
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
                 className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -132,6 +133,7 @@ export default function ResetPassword() {
               <input
                 type="number"
                 value={verificationCode}
+                autoComplete='off'
                 onChange={(e) => setVerificationCode(e.target.value)}
                 placeholder="Enter the verification code"
                 className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -149,6 +151,7 @@ export default function ResetPassword() {
               <input
                 type="password"
                 value={password}
+                autoComplete='off'
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter your new password"
                 className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -159,6 +162,7 @@ export default function ResetPassword() {
               <input
                 type="password"
                 value={confirmPassword}
+                autoComplete='off'
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Confirm your new password"
                 className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"

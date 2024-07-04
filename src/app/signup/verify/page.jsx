@@ -59,6 +59,7 @@ export default function Verify() {
             type="number"
             value={verificationCode}
             onChange={(e) => setVerificationCode(e.target.value)}
+            autoComplete='off'
             placeholder="Enter verification code"
           />
           <button

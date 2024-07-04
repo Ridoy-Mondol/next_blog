@@ -9,15 +9,27 @@ const Footer = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-20">
         <div className="flex flex-col gap-4">
           <h3 className="text-lg font-bold text-white">Contact the Publisher</h3>
-          <div className="text-[#E5E5E5]">ridoymondol140@gmail.com</div>
-          <div className="text-[#E5E5E5]">+8801319118383</div>
+          <div className="text-[#E5E5E5]">
+            <Link href="mailto:ridoymondol140@gmail.com">ridoymondol140@gmail.com</Link>
+            </div>
+          <div className="text-[#E5E5E5]">
+            <Link href="https://wa.me/8801319118383">+8801319118383</Link>
+            </div>
         </div>
         <div className="flex flex-col gap-4">
           <h3 className="text-lg font-bold text-white">Explore</h3>
+          <span>
           <Link href="/" className="text-[#E5E5E5] hover:text-[#F86F03]">Home</Link>
+          </span>
+          <span>
           <Link href="/profile" className="text-[#E5E5E5] hover:text-[#F86F03]">Profile</Link>
+          </span>
+          <span>
           <Link href="/articles" className="text-[#E5E5E5] hover:text-[#F86F03]">Articles</Link>
+          </span>
+          <span>
           <Link href="/post" className="text-[#E5E5E5] hover:text-[#F86F03]">Post</Link>
+          </span>
         </div>
         <div className="flex flex-col gap-4">
           <h3 className="text-lg font-bold text-white">Headquarter</h3>

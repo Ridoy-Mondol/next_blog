@@ -130,6 +130,7 @@ const Registration = () => {
                   className="reg-input"
                   name="name"
                   value={value.name}
+                  autoComplete='off'
                   onChange={InputValue}
                 />
               </div>
@@ -143,6 +144,7 @@ const Registration = () => {
                   className="reg-input"
                   name="email"
                   value={value.email}
+                  autoComplete='off'
                   onChange={InputValue}
                 />
               </div>
@@ -156,6 +158,7 @@ const Registration = () => {
                   className="reg-input"
                   name="password"
                   value={value.password}
+                  autoComplete='off'
                   onChange={InputValue}
                 />
               </div>
@@ -169,6 +172,7 @@ const Registration = () => {
                   className="reg-input"
                   name="cpassword"
                   value={value.cpassword}
+                  autoComplete='off'
                   onChange={InputValue}
                 />
               </div>

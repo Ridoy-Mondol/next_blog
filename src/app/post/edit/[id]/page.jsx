@@ -170,7 +170,7 @@ function Page({params}) {
         <h3 className='input-title font-bold'>
           Write your title here in 25-60 characters
         </h3>
-        <input type='text' name='title' placeholder='Title' className='blog-input my-3' value={title} onChange={handleTitleChange} /><br />
+        <input type='text' name='title' placeholder='Title' autoComplete='off' className='blog-input my-3' value={title} onChange={handleTitleChange} /><br />
         {errors.title && <span className="error-message">{errors.title}</span>}
         
         

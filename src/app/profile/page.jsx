@@ -136,7 +136,7 @@ function Page() {
 
         <div className={`position-absolute update-profile-name update-name ${show ? "" : "d-none"}`}>
           <h1> Change Your Name</h1>
-          <input type="text" value={name} className="update-name-input"
+          <input type="text" value={name} autoComplete='off' className="update-name-input"
             onChange={(e) => setName(e.target.value)}
           />
           <div className="update-name-btn">
