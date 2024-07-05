@@ -32,8 +32,14 @@ function Page() {
         formData.append('name', name);
       }
       if (img) {
-        formData.append('profileImage', img);
+        if (img.size > 2000000) {
+          toast.error("Profile Image is too large");
+          return;
+        } else {
+          formData.append('profileImage', img);
+        }       
       }
+
       const token = getCookie('token2');
       if (!token) {
         throw new Error("No token found");
@@ -42,9 +48,8 @@ function Page() {
       const headers = new Headers();
       headers.append('Authorization', `Bearer ${token}`);
   
-      if (name.length > 0 || img) {
-        setIsloading(true);
-  
+      if (name.length > 0 || (img && (img.size < 2000000))) {
+        setIsloading(true);  
         try {
           const res = await fetch(`/api/users/profile/${author}`, {
             method: 'PATCH',

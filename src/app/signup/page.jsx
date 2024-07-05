@@ -19,6 +19,7 @@ const Registration = () => {
     email: "",
     password: "",
     cpassword: "",
+    largeImage: "",
   });
 
   const InputValue = (event) => {
@@ -53,7 +54,7 @@ const Registration = () => {
       formData.append('name', value.name);
       formData.append('email', value.email);
       formData.append('password', value.password);
-      image && formData.append('image', image);
+      image && formData.append('profileImage', image);
 
       setIsLoading(true);
 
@@ -104,6 +105,9 @@ const Registration = () => {
     }
     if (value.cpassword.length > 0 && value.password !== value.cpassword) {
       error.cpassword = "Confirm password does not match";
+    }
+    if (image && (image.size > 2000000)) {
+      error.largeImage = "Profile Image is too large";
     }
     return error;
   };
@@ -194,6 +198,7 @@ const Registration = () => {
                   />
                 </label>
               </div>
+              <div className="reg-error-msg">{error.largeImage}</div>
 
               <label className="reg-checkbox">
                 <input

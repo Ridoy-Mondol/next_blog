@@ -70,7 +70,11 @@ function Page({params}) {
             formData.append('name', name);
           }
           if (img) {
-            formData.append('profileImage', img);
+            if (img.size > 2000000) {
+              toast.error("profileImage is too large");
+            } else {
+              formData.append('profileImage', img);
+            }       
           }
       
           const token = getCookie('token2');
@@ -81,7 +85,7 @@ function Page({params}) {
           const headers = new Headers();
           headers.append('Authorization', `Bearer ${token}`);
       
-          if (name.length > 0 || img) {
+          if (name.length > 0 || (img && img.size < 2000000)) {
             setIsloading(true);
       
             try {

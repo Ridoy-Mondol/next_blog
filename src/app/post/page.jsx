@@ -85,6 +85,12 @@ function Page() {
     if (!image1) {
       newErrors.image = 'Image is required.';
     }
+    if (new Blob([blog]).size > 500000) {
+      newErrors.blog = 'Blog content is too large.';
+    }
+    if (image1 && image1.size > 2000000) {
+      newErrors.image = 'Image is too large.';
+    }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -102,6 +108,9 @@ function Page() {
           setTimeout(() => {
             window.location.href = '/articles';
           }, 1000);          
+        } else if (res.status === 413) {
+          const errorData = await res.json();
+          toast.error(errorData.error);
         } else {
           console.error('Error submitting form:', res.status, res.statusText);
           toast.error("Something went wrong. Please try again");
