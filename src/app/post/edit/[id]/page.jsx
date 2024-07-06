@@ -90,14 +90,14 @@ function Page({params}) {
     if (stripHtml(blog).length > 0 && stripHtml(blog).length < 500) {
       newErrors.emptyblog = 'Blog must be at least 500 characters long';
     }
-    if (new Blob([blog]).size > 500000) {
-      toast.error("Blog content is too large");
-      newErrors.largeBlog = "Blog content is too large";
-    }
-    if (image1 && image1.size > 2000000) {
-      toast.error("Image is too large");
-      newErrors.largeImage = "Image is too large";
-    }
+    // if (new Blob([blog]).size > 500000) {
+    //   toast.error("Blog content is too large");
+    //   newErrors.largeBlog = "Blog content is too large";
+    // }
+    // if (image1 && image1.size > 2000000) {
+    //   toast.error("Image is too large");
+    //   newErrors.largeImage = "Image is too large";
+    // }
     
     const token = getCookie('token2');
     const headers = new Headers();
@@ -112,18 +112,16 @@ function Page({params}) {
           headers: headers,
           body: formData,
         });
-        if (res.status === 200) {
+        const responseData = await res.json();
+        if (res.ok) {
           setErrors({});
           toast.success("Blog updated successfully");
           setTimeout(() => {
             window.location.href = '/articles';
           }, 1000);
-        } else if (res.status === 413) {
-          const errorData = await res.json();
-          toast.error(errorData.error);
         } else {
           console.error('Error submitting form:', res.status, res.statusText);
-          toast.error("Something went wrong. Please try again");
+          toast.error(responseData.error || "Something went wrong. Please try again");
         }
       } catch (error) {
         console.error('Error submitting form:', error);

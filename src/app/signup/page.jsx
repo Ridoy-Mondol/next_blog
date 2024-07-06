@@ -106,9 +106,9 @@ const Registration = () => {
     if (value.cpassword.length > 0 && value.password !== value.cpassword) {
       error.cpassword = "Confirm password does not match";
     }
-    if (image && (image.size > 2000000)) {
-      error.largeImage = "Profile Image is too large";
-    }
+    // if (image && (image.size > 2000000)) {
+    //   error.largeImage = "Profile Image is too large";
+    // }
     return error;
   };
 
@@ -198,7 +198,7 @@ const Registration = () => {
                   />
                 </label>
               </div>
-              <div className="reg-error-msg">{error.largeImage}</div>
+              {/* <div className="reg-error-msg">{error.largeImage}</div> */}
 
               <label className="reg-checkbox">
                 <input

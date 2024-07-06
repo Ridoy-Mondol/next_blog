@@ -69,12 +69,15 @@ function Page({params}) {
           if (name) {
             formData.append('name', name);
           }
+          // if (img) {
+          //   if (img.size > 2000000) {
+          //     toast.error("profileImage is too large");
+          //   } else {
+          //     formData.append('profileImage', img);
+          //   }       
+          // }
           if (img) {
-            if (img.size > 2000000) {
-              toast.error("profileImage is too large");
-            } else {
-              formData.append('profileImage', img);
-            }       
+            formData.append('profileImage', img);
           }
       
           const token = getCookie('token2');
@@ -85,7 +88,7 @@ function Page({params}) {
           const headers = new Headers();
           headers.append('Authorization', `Bearer ${token}`);
       
-          if (name.length > 0 || (img && img.size < 2000000)) {
+          if (name.length > 0 || img) {
             setIsloading(true);
       
             try {

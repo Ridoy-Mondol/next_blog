@@ -18,22 +18,22 @@ export async function POST(request) {
     const image1File = data.get('image1');
 
 
-    if (new Blob([blog]).size > 500000) {
-      return new NextResponse(
-        JSON.stringify({ success: false, error: 'Blog content is too large.' }),
-        { status: 413 }
-      );
-    }
+    // if (new Blob([blog]).size > 500000) {
+    //   return new NextResponse(
+    //     JSON.stringify({ success: false, error: 'Blog content is too large.' }),
+    //     { status: 413 }
+    //   );
+    // }
 
     const buffer1 = await image1File.arrayBuffer();
     const image1 = Buffer.from(new Uint8Array(buffer1));
 
-    if (image1.length > 2000000) {
-      return new NextResponse(
-        JSON.stringify({ success: false, error: 'Image is too large.' }),
-        { status: 413 }
-      );
-    }
+    // if (image1.length > 2000000) {
+    //   return new NextResponse(
+    //     JSON.stringify({ success: false, error: 'Image is too large.' }),
+    //     { status: 413 }
+    //   );
+    // }
 
 
     const imageUrl1 = await uploadToCloudinary(image1, image1File.name, image1File.type);
