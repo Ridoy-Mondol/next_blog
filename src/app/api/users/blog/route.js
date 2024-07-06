@@ -58,10 +58,12 @@ export async function POST(request) {
       date: DateTime.now().toLocaleString({ month: '2-digit', day: '2-digit', year: '2-digit' }),
     });
 
-    await newPost.save();
-
-    await redisClient.del('blog_posts');
-
+    const savedPost = await newPost.save();
+   
+    if (savedPost) {
+      await redisClient.del('blog_posts');
+    }
+    
     return new NextResponse(
       JSON.stringify({ success: true }),
       { status: 200 }

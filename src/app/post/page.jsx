@@ -88,8 +88,8 @@ function Page() {
       newErrors.image = 'Image is required.';
     }
     if (new Blob([blog]).size > 2000000) {
-      toast.error("Blog content is too large");
-      newErrors.largeBlog = 'Blog content is too large.';
+      toast.error("Blog field exceeded the maximum size of 2MB. Please use smaller images");
+      newErrors.largeBlog = "Blog field exceeded the maximum size of 2MB. Please use smaller images";
     }
     if (image1 && image1.size > 2000000) {
       toast.error("Image is too large");
@@ -108,17 +108,6 @@ function Page() {
         });
         console.log("successfully submitted");
         const responseData = await res.json();
-        // if (res.status === 200) {
-        //   toast.success("Blog created successfully");
-        //   setTimeout(() => {
-        //     window.location.href = '/articles';
-        //   }, 1000);          
-        // } else if (res.status === 413) {
-        //   toast.error(responseData.error);
-        // } else {
-        //   console.error('Error submitting form:', res.status, res.statusText);
-        //   toast.error(responseData.error || "Something went wrong. Please try again");
-        // }
 
         if (res.ok) {
           toast.success("Blog created successfully");
@@ -239,7 +228,7 @@ function Page() {
       {currentStep >= 4 && (
         <div className='input-div'>
           <h3 className='input-title font-bold'>
-            Choose an image for your blog
+            Choose an image for your blog (Max 2MB)
           </h3>
           <input
             type="file"

@@ -12,7 +12,7 @@ function Editors_pick(props) {
     <div className="flex flex-wrap popular-blogs">
     {
       props.post.map((val,index) => {
-      if (index === 1 || index === 3 || index === 2 || index === 7) {
+      if (index === 3 || index === 4 || index === 6 || index === 7) {
         return (
         <Link href={`/articles/${val._id}`} className="popular-single position-relative" key={val._id}>
           <span className="text-xs text-white text-center home-category position-absolute popular-category">

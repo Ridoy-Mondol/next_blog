@@ -91,8 +91,8 @@ function Page({params}) {
       newErrors.emptyblog = 'Blog must be at least 500 characters long';
     }
     if (new Blob([blog]).size > 2000000) {
-      toast.error("Blog content is too large");
-      newErrors.largeBlog = "Blog content is too large";
+      toast.error("Blog field exceeded the maximum size of 2MB. Please use smaller images");
+      newErrors.largeBlog = "Blog content exceeded the maximum size of 2MB. Please use smaller images";
     }
     if (image1 && image1.size > 2000000) {
       toast.error("Image is too large");
@@ -227,7 +227,7 @@ function Page({params}) {
       
         <div className='input-div'>
           <h3 className='input-title font-bold'>
-            Choose an image for your blog
+            Choose an image for your blog (Max 2MB)
           </h3>
           <input
             type="file"
