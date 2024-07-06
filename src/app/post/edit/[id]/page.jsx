@@ -121,9 +121,10 @@ function Page({params}) {
           }, 1000);
         } else {
           console.error('Error submitting form:', res.status, res.statusText);
-          toast.error(responseData.error || "Something went wrong. Please try again");
+          toast.error("Problem updating blog. Please try again");
         }
-      } catch (error) {
+      } 
+      catch (error) {
         console.error('Error submitting form:', error);
         toast.error("Something went wrong. Please try again");
       }
