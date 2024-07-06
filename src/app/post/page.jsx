@@ -21,7 +21,9 @@ function Page() {
     blog: '',
     emptyblog: '',
     category: '',
-    image: ''
+    image: '',
+    largeBlog: '',
+    largeImage: '',
   });
   const editor = useRef(null);
 
@@ -85,12 +87,14 @@ function Page() {
     if (!image1) {
       newErrors.image = 'Image is required.';
     }
-    // if (new Blob([blog]).size > 500000) {
-    //   newErrors.blog = 'Blog content is too large.';
-    // }
-    // if (image1 && image1.size > 2000000) {
-    //   newErrors.image = 'Image is too large.';
-    // }
+    if (new Blob([blog]).size > 2000000) {
+      toast.error("Blog content is too large");
+      newErrors.largeBlog = 'Blog content is too large.';
+    }
+    if (image1 && image1.size > 2000000) {
+      toast.error("Image is too large");
+      newErrors.largeImage = 'Image is too large.';
+    }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -103,7 +107,7 @@ function Page() {
           body: formData,
         });
         console.log("successfully submitted");
-        // const responseData = await res.json();
+        const responseData = await res.json();
         // if (res.status === 200) {
         //   toast.success("Blog created successfully");
         //   setTimeout(() => {
@@ -123,7 +127,7 @@ function Page() {
           }, 1000);          
         } else {
           console.error('Error submitting form:', response.status, response.statusText);
-          toast.error("Problem updating blog. Please try again");
+          toast.error(responseData.error || "Problem updating blog. Please try again");
         }
       } catch (error) {
         console.error('Error submitting form:', error);

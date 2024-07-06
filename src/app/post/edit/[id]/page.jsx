@@ -90,14 +90,14 @@ function Page({params}) {
     if (stripHtml(blog).length > 0 && stripHtml(blog).length < 500) {
       newErrors.emptyblog = 'Blog must be at least 500 characters long';
     }
-    // if (new Blob([blog]).size > 500000) {
-    //   toast.error("Blog content is too large");
-    //   newErrors.largeBlog = "Blog content is too large";
-    // }
-    // if (image1 && image1.size > 2000000) {
-    //   toast.error("Image is too large");
-    //   newErrors.largeImage = "Image is too large";
-    // }
+    if (new Blob([blog]).size > 2000000) {
+      toast.error("Blog content is too large");
+      newErrors.largeBlog = "Blog content is too large";
+    }
+    if (image1 && image1.size > 2000000) {
+      toast.error("Image is too large");
+      newErrors.largeImage = "Image is too large";
+    }
     
     const token = getCookie('token2');
     const headers = new Headers();
@@ -121,7 +121,7 @@ function Page({params}) {
           }, 1000);
         } else {
           console.error('Error submitting form:', res.status, res.statusText);
-          toast.error("Problem updating blog. Please try again");
+          toast.error(responseData.error || "Problem updating blog. Please try again");
         }
       } 
       catch (error) {
