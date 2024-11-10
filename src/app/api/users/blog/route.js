@@ -3,7 +3,7 @@ import connectDB from '@/db/connection';
 import BlogPost from '@/models/blogModel';
 import user from "@/models/signupModel";
 import cloudinary from '@/utils/cloudinary';
-import {redisClient, connectRedis} from "@/utils/redis"
+// import { redisClient, connectRedis } from "@/utils/redis" // Commented out Redis imports
 import { DateTime } from 'luxon';
 import jwt from 'jsonwebtoken';
 
@@ -16,7 +16,6 @@ export async function POST(request) {
     const blog = data.get('blog');
     const category = data.get('category');
     const image1File = data.get('image1');
-
 
     if (new Blob([blog]).size > 2000000) {
       return new NextResponse(
@@ -35,7 +34,6 @@ export async function POST(request) {
       );
     }
 
-
     const imageUrl1 = await uploadToCloudinary(image1, image1File.name, image1File.type);
 
     const token = request.headers.get('Authorization')?.split(' ')[1];
@@ -43,7 +41,7 @@ export async function POST(request) {
 
     const decodedToken = jwt.verify(token, secretKey);
     const userId = decodedToken.userId;
-    const author = await user.findOne({_id: userId});
+    const author = await user.findOne({ _id: userId });
 
     const newPost = new BlogPost({
       title,
@@ -59,9 +57,9 @@ export async function POST(request) {
     });
 
     const savedPost = await newPost.save();
-   
+
     if (savedPost) {
-      await redisClient.del('blog_posts');
+      // await redisClient.del('blog_posts'); // Commented out Redis cache deletion
     }
     
     return new NextResponse(
@@ -98,29 +96,29 @@ function uploadToCloudinary(buffer, fileName, mimeType) {
   });
 }
 
-
 export async function GET(request) {
   let result = [];
   let success = true;
   const token = request.headers.get('Authorization')?.split(' ')[1];
   let userId;
-  const cacheKey = 'blog_posts';
+
+  // const cacheKey = 'blog_posts'; // Commented out cache key
 
   try {
     await connectDB();
-    await connectRedis();
+    // await connectRedis(); // Commented out Redis connection
     const decodedToken = jwt.verify(token, secretKey);
     userId = decodedToken.userId;
 
-    const cachedData = await redisClient.get(cacheKey);
-    if (cachedData) {
-      result = JSON.parse(cachedData);
-      console.log('Data fetched from Redis cache');
-    } else {
+    // const cachedData = await redisClient.get(cacheKey); // Commented out Redis cache get
+    // if (cachedData) {
+    //   result = JSON.parse(cachedData); // Commented out Redis data fetch
+    //   console.log('Data fetched from Redis cache');
+    // } else {
       result = await BlogPost.find();
-      await redisClient.set(cacheKey, JSON.stringify(result), 'EX', 100);
-      console.log('Data fetched from MongoDB and stored in Redis cache');
-    }
+      // await redisClient.set(cacheKey, JSON.stringify(result), 'EX', 100); // Commented out Redis cache set
+      console.log('Data fetched from MongoDB');
+    // }
   } catch (error) {
     console.error('Error fetching blog posts:', error);
     success = false;
@@ -128,6 +126,3 @@ export async function GET(request) {
 
   return NextResponse.json({ result, success, userId });
 }
-
-
-

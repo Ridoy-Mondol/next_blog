@@ -2,7 +2,7 @@ import signupUser from "@/models/signupModel";
 import connectDB from '@/db/connection';
 import { NextResponse } from "next/server";
 import cloudinary from '@/utils/cloudinary';
-import { redisClient, connectRedis } from "@/utils/redis";
+// import { redisClient, connectRedis } from "@/utils/redis"; // Commented out Redis import
 import jwt from 'jsonwebtoken';
 import bcrypt from "bcryptjs";
 
@@ -11,7 +11,7 @@ const secretKey = process.env.JWT_SECRET_KEY;
 export async function GET(request, content) {
   try {
     await connectDB();
-    await connectRedis();
+    // await connectRedis(); // Commented out Redis connection
     
     const id = content.params.id;
 
@@ -19,23 +19,23 @@ export async function GET(request, content) {
       throw new Error('User ID is missing');
     }
 
-    const cacheKey = `profile_data_${id}`;
-    const cachedData = await redisClient.get(cacheKey);
+    // const cacheKey = `profile_data_${id}`; // Commented out cache key logic
+    // const cachedData = await redisClient.get(cacheKey); // Commented out Redis cache get
 
-    if (cachedData) {
-      console.log('User fetched from Redis cache');
-      return NextResponse.json({ result: JSON.parse(cachedData), success: true });
-    } else {
+    // if (cachedData) { // Commented out Redis cache logic
+    //   console.log('User fetched from Redis cache');
+    //   return NextResponse.json({ result: JSON.parse(cachedData), success: true });
+    // } else {
       const result = await signupUser.findOne({ _id: id });
 
       if (!result) {
         return NextResponse.json({ message: "User not found", success: false }, { status: 404 });
       }
 
-      await redisClient.set(cacheKey, JSON.stringify(result), 'EX', 3600);
-      console.log('User fetched from MongoDB and stored in Redis cache');
+      // await redisClient.set(cacheKey, JSON.stringify(result), 'EX', 3600); // Commented out Redis cache set
+      console.log('User fetched from MongoDB');
       return NextResponse.json({ result, success: true });
-    }
+    // }
   } catch (error) {
     console.error('Error fetching user data:', error);
     return NextResponse.json({ message: "Error fetching user data", success: false }, { status: 500 });
@@ -51,7 +51,7 @@ export async function PATCH(request, content) {
     }
 
     await connectDB();
-    await connectRedis();
+    // await connectRedis(); // Commented out Redis connection
 
     const data = await request.formData();
     const updates = {};
@@ -88,7 +88,7 @@ export async function PATCH(request, content) {
       return NextResponse.json({ message: "User not found", success: false }, { status: 404 });
     }
 
-    await redisClient.del(`profile_data_${id}`);
+    // await redisClient.del(`profile_data_${id}`); // Commented out Redis cache delete
     return NextResponse.json({ result: updatedUser, success: true });
   } catch (error) {
     console.error('Error updating user:', error);
