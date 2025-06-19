@@ -1,15 +1,15 @@
 import signupUser from "@/models/signupModel";
-import connectDB from '@/db/connection';
-import cloudinary from '@/utils/cloudinary';
-import { NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
-import nodemailer from 'nodemailer';
+import connectDB from "@/db/connection";
+import cloudinary from "@/utils/cloudinary";
+import { NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
+import nodemailer from "nodemailer";
 
 const secretKey = process.env.JWT_SECRET_KEY;
 const code = Math.floor(100000 + Math.random() * 900000);
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  service: "gmail",
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
@@ -20,7 +20,7 @@ async function sendVerificationEmail(email) {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
-    subject: 'Verification Code',
+    subject: "Verification Code",
     html: `
       <!DOCTYPE html>
       <html lang="en">
@@ -116,19 +116,19 @@ async function uploadToCloudinary(buffer, fileName, mimeType) {
       {
         folder: "blogprofile",
         filename_override: fileName,
-        format: mimeType.split('/').pop(),
+        format: mimeType.split("/").pop(),
       },
       (error, result) => {
         if (error) {
-          console.error('Error uploading file to Cloudinary:', error);
+          console.error("Error uploading file to Cloudinary:", error);
           return reject(error);
         }
         resolve(result.secure_url);
       }
     );
 
-    stream.on('error', (err) => {
-      console.error('Stream error:', err);
+    stream.on("error", (err) => {
+      console.error("Stream error:", err);
       reject(err);
     });
 
@@ -139,20 +139,21 @@ async function uploadToCloudinary(buffer, fileName, mimeType) {
 export async function POST(request) {
   try {
     const data = await request.formData();
-    const name = data.get('name');
-    const email = data.get('email');
-    const password = data.get('password');
-    const imagefile = data.get('image');
-
+    const name = data.get("name");
+    const email = data.get("email");
+    const password = data.get("password");
+    const imagefile = data.get("image");
 
     await connectDB();
     const userExist = await signupUser.findOne({ email });
 
     if (userExist) {
-      return new NextResponse(JSON.stringify({ 
-        message: "User already exists", 
-        success: false 
-      }),);
+      return new NextResponse(
+        JSON.stringify({
+          message: "User already exists",
+          success: false,
+        })
+      );
     }
 
     let imageUrl = null;
@@ -160,30 +161,37 @@ export async function POST(request) {
     if (imagefile) {
       const buffer = await imagefile.arrayBuffer();
       const image = Buffer.from(new Uint8Array(buffer));
-      imageUrl = await uploadToCloudinary(image, imagefile.name, imagefile.type);
+      imageUrl = await uploadToCloudinary(
+        image,
+        imagefile.name,
+        imagefile.type
+      );
     }
 
-
     const tokenPayload = { name, email, password, imageUrl, code };
-    const token = jwt.sign(tokenPayload, secretKey, { expiresIn: '10m' });
+    const token = jwt.sign(tokenPayload, secretKey, { expiresIn: "10m" });
 
     const emailPromise = sendVerificationEmail(email);
 
-    const response = new NextResponse(JSON.stringify({
-      message: "Please check your email for the verification code",
-      status: 200,
-      success: true,
-    }));
+    const response = new NextResponse(
+      JSON.stringify({
+        message: "Please check your email for the verification code",
+        status: 200,
+        success: true,
+      })
+    );
 
-    response.cookies.set('token', token, { maxAge: 600 });
+    response.cookies.set("token", token, { maxAge: 600 });
     await Promise.allSettled([emailPromise]);
     return response;
-
   } catch (error) {
-    console.error('Error during signup:', error);
-    return new NextResponse(JSON.stringify({ 
-      message: "Signup failed", 
-      success: false }), 
-      { status: 500 });
+    console.error("Error during signup:", error);
+    return new NextResponse(
+      JSON.stringify({
+        message: "Signup failed",
+        success: false,
+      }),
+      { status: 500 }
+    );
   }
 }

@@ -1,9 +1,9 @@
-import connectDB from '@/db/connection';
+import connectDB from "@/db/connection";
 import signupUser from "@/models/signupModel";
-import cloudinary from '@/utils/cloudinary';
-import { NextResponse } from 'next/server';
+import cloudinary from "@/utils/cloudinary";
+import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 
 const secretKey = process.env.JWT_SECRET_KEY;
 
@@ -12,29 +12,33 @@ export async function POST(request) {
     const { ClientVerificationCode } = await request.json();
 
     if (!ClientVerificationCode) {
-      throw new Error('Verification code not provided');
+      throw new Error("Verification code not provided");
     }
 
-    const Verifytoken = request.cookies.get('token')?.value;
-
+    const Verifytoken = request.cookies.get("token")?.value;
 
     if (!Verifytoken) {
-      throw new Error('Session expired, please try again');
+      throw new Error("Session expired, please try again");
     }
 
-    const { name, email, password, imageUrl, code } = jwt.verify(Verifytoken, secretKey);
-
+    const { name, email, password, imageUrl, code } = jwt.verify(
+      Verifytoken,
+      secretKey
+    );
 
     const storedVerificationCode = parseInt(ClientVerificationCode, 10);
 
     if (code !== storedVerificationCode) {
       cloudinary.uploader.destroy(imageUrl);
-      return new NextResponse(JSON.stringify({
-        message: "Verification code does not match",
-        success: false,
-      }), {
-        status: 400,
-      });
+      return new NextResponse(
+        JSON.stringify({
+          message: "Verification code does not match",
+          success: false,
+        }),
+        {
+          status: 400,
+        }
+      );
     }
 
     await connectDB();
@@ -52,23 +56,30 @@ export async function POST(request) {
     await newUser.save();
 
     const tokenPayload = { userId: newUser._id };
-    const token = jwt.sign(tokenPayload, secretKey, { expiresIn: '10d' });
+    const token = jwt.sign(tokenPayload, secretKey, { expiresIn: "10d" });
 
-    const response = new NextResponse(JSON.stringify({
-      message: "Verification successful",
-      success: true,
-    }), {
-      status: 200,
-    });
+    const response = new NextResponse(
+      JSON.stringify({
+        message: "Verification successful",
+        success: true,
+      }),
+      {
+        status: 200,
+      }
+    );
 
-    response.cookies.set('token2', token , { maxAge: 10 * 24 * 60 * 60});
-    response.cookies.set('token', '', { maxAge: 0 });
+    response.cookies.set("token2", token, { maxAge: 10 * 24 * 60 * 60 });
+    response.cookies.set("token", "", { maxAge: 0 });
 
     return response;
   } catch (error) {
-    console.error('Error verifying email:', error);
-    return new NextResponse(JSON.stringify({ message: error.message || "Session expired", success: false }), { status: 400 });
+    console.error("Error verifying email:", error);
+    return new NextResponse(
+      JSON.stringify({
+        message: error.message || "Session expired",
+        success: false,
+      }),
+      { status: 400 }
+    );
   }
 }
-
-

@@ -13,7 +13,7 @@
 //       try {
 //         await redisClient.connect();
 //         console.log('Connected to Redis');
-//         break; 
+//         break;
 //       } catch (err) {
 //         console.error('Redis Client Error', err);
 //         await new Promise(resolve => setTimeout(resolve, 5000));
@@ -23,4 +23,3 @@
 // }
 
 // export { redisClient, connectRedis };
-

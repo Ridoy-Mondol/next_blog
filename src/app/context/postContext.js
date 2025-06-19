@@ -1,7 +1,5 @@
-"use client"
-import React, { createContext, useState, useEffect, useContext } from 'react';
-import { getCookie } from 'cookies-next';
-
+"use client";
+import React, { createContext, useState, useEffect, useContext } from "react";
 const PostsContext = createContext();
 
 export const PostsProvider = ({ children }) => {
@@ -11,23 +9,16 @@ export const PostsProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [loading2, setLoading2] = useState(true);
   const [error, setError] = useState(false);
-  const [author, setAuthor] = useState('');
+  const [author, setAuthor] = useState("");
 
-  const token = getCookie('token2');
   async function fetchPosts() {
-    const headers = new Headers();
-    headers.append('Authorization', `Bearer ${token}`);
-    
     try {
-      const response = await fetch('/api/users/blog', {
-        method: 'GET',
-        headers: headers,
-      });
-  
+      const response = await fetch("/api/users/blog");
+
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-  
+
       const data = await response.json();
       if (data.success) {
         setAuthor(data.userId);
@@ -91,12 +82,16 @@ export const PostsProvider = ({ children }) => {
         setUser(data);
         setLoading2(false);
       } catch (error) {
-        console.error('Error fetching user:', error);
+        console.error("Error fetching user:", error);
+        setLoading2(false);
       }
     }
-  
+
     if (author) {
       fetchUser();
+    } else {
+      setLoading2(false);
+      setUser(null);
     }
   }, [author]);
 
@@ -111,15 +106,27 @@ export const PostsProvider = ({ children }) => {
   };
 
   const deletePost = (id) => {
-    setPosts(prevPosts => prevPosts.filter(post => post._id !== id));
+    setPosts((prevPosts) => prevPosts.filter((post) => post._id !== id));
   };
 
   useEffect(() => {
-    loadPosts();    
+    loadPosts();
   }, []);
 
   return (
-    <PostsContext.Provider value={{ posts, loading, author, deletePost, getSinglePost, singlePost, getUser, user, loading2 }}>
+    <PostsContext.Provider
+      value={{
+        posts,
+        loading,
+        author,
+        deletePost,
+        getSinglePost,
+        singlePost,
+        getUser,
+        user,
+        loading2,
+      }}
+    >
       {children}
     </PostsContext.Provider>
   );

@@ -1,14 +1,13 @@
-import React from 'react';
-import { signIn } from 'next-auth/react';
-import googleLogo from '@/app/Images/google-logo.png';
-import Image from 'next/image';
+import React from "react";
+import { signIn } from "next-auth/react";
+import googleLogo from "@/app/Images/google-logo.png";
+import Image from "next/image";
 
 function Page({ props }) {
-
   const handleLogIn = async () => {
-    sessionStorage.setItem('signIn', 'true');
-    await signIn('google', {
-      callbackUrl: '/auth/signin',
+    sessionStorage.setItem("signIn", "true");
+    await signIn("google", {
+      callbackUrl: "/auth/signin",
     });
   };
 

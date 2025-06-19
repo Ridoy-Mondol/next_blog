@@ -8,27 +8,45 @@ const Footer = () => {
     <footer className="bg-[#222222] py-16 px-10 box-border text-left text-sm text-[#E5E5E5] font-lora">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-20">
         <div className="flex flex-col gap-4">
-          <h3 className="text-lg font-bold text-white">Contact the Publisher</h3>
+          <h3 className="text-lg font-bold text-white">
+            Contact the Developer
+          </h3>
           <div className="text-[#E5E5E5]">
-            <Link href="mailto:ridoymondol140@gmail.com">ridoymondol140@gmail.com</Link>
-            </div>
+            <Link href="mailto:ahatashamul140@gmail.com">
+              ahatashamul140@gmail.com
+            </Link>
+          </div>
           <div className="text-[#E5E5E5]">
             <Link href="https://wa.me/8801319118383">+8801319118383</Link>
-            </div>
+          </div>
         </div>
         <div className="flex flex-col gap-4">
           <h3 className="text-lg font-bold text-white">Explore</h3>
           <span>
-          <Link href="/" className="text-[#E5E5E5] hover:text-[#F86F03]">Home</Link>
+            <Link href="/" className="text-[#E5E5E5] hover:text-[#F86F03]">
+              Home
+            </Link>
           </span>
           <span>
-          <Link href="/profile" className="text-[#E5E5E5] hover:text-[#F86F03]">Profile</Link>
+            <Link
+              href="/profile"
+              className="text-[#E5E5E5] hover:text-[#F86F03]"
+            >
+              Profile
+            </Link>
           </span>
           <span>
-          <Link href="/articles" className="text-[#E5E5E5] hover:text-[#F86F03]">Articles</Link>
+            <Link
+              href="/articles"
+              className="text-[#E5E5E5] hover:text-[#F86F03]"
+            >
+              Articles
+            </Link>
           </span>
           <span>
-          <Link href="/post" className="text-[#E5E5E5] hover:text-[#F86F03]">Post</Link>
+            <Link href="/post" className="text-[#E5E5E5] hover:text-[#F86F03]">
+              Post
+            </Link>
           </span>
         </div>
         <div className="flex flex-col gap-4">
@@ -38,14 +56,29 @@ const Footer = () => {
         <div className="flex flex-col gap-4">
           <h3 className="text-lg font-bold text-white">Connections</h3>
           <div className="flex gap-4">
-            <Link target="_blank" href="https://www.facebook.com/profile.php?id=100015131225530">
-            <FontAwesomeIcon icon={faFacebook} className="text-[#E5E5E5] hover:text-[#F86F03]" />
+            <Link
+              target="_blank"
+              href="https://www.facebook.com/profile.php?id=100015131225530"
+            >
+              <FontAwesomeIcon
+                icon={faFacebook}
+                className="text-[#E5E5E5] hover:text-[#F86F03]"
+              />
             </Link>
-            <Link target="_blank" href="https://www.linkedin.com/in/md-ridoy-mondol-885555297/">
-            <FontAwesomeIcon icon={faLinkedin} className="text-[#E5E5E5] hover:text-[#F86F03]" />
+            <Link
+              target="_blank"
+              href="https://www.linkedin.com/in/md-ridoy-mondol-885555297/"
+            >
+              <FontAwesomeIcon
+                icon={faLinkedin}
+                className="text-[#E5E5E5] hover:text-[#F86F03]"
+              />
             </Link>
-            <Link target="_blank" href="https://ridoy-mondol.github.io/portfolio/">
-            <GlobeAltIcon className="h-[16px] w-[16px] text-[#E5E5E5] hover:text-[#F86F03] mt-[2px]" />
+            <Link
+              target="_blank"
+              href="https://ridoy-mondol.github.io/portfolio/"
+            >
+              <GlobeAltIcon className="h-[16px] w-[16px] text-[#E5E5E5] hover:text-[#F86F03] mt-[2px]" />
             </Link>
           </div>
         </div>

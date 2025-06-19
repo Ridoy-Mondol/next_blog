@@ -1,24 +1,24 @@
 import signupUser from "@/models/signupModel";
-import connectDB from '@/db/connection';
-import { NextResponse } from 'next/server';
-import nodemailer from 'nodemailer';
+import connectDB from "@/db/connection";
+import { NextResponse } from "next/server";
+import nodemailer from "nodemailer";
 
 const code = Math.floor(100000 + Math.random() * 900000);
 
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-    }
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
 });
 
 async function sendVerificationEmail(email) {
-    const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: email,
-        subject: 'Verification Code for Reset Password',
-        html: `
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: "Verification Code for Reset Password",
+    html: `
         <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -101,10 +101,10 @@ async function sendVerificationEmail(email) {
     </div>
 </body>
 </html>
-     `
-    };
+     `,
+  };
 
-    await transporter.sendMail(mailOptions);
+  await transporter.sendMail(mailOptions);
 }
 
 // async function generateVerificationCode() {
@@ -112,42 +112,52 @@ async function sendVerificationEmail(email) {
 // }
 
 export async function POST(request) {
-    try {
-        const { email } = await request.json();
-        if (!email) {
-            throw new Error('Email not provided');
-        }
-        await connectDB();
-        const userExist = await signupUser.findOne({ email });
-        if (!userExist) {
-            return new NextResponse(JSON.stringify({
-                message: "User not exist",
-                success: false,
-            }), {
-                status: 404,
-            });
-        }
-        if (userExist.password === null) {
-            return new NextResponse(JSON.stringify({
-                message: "Can't reset password. This account is created with google.",
-                success: false,
-            }));
-        }
-
-        // const verificationCode = await generateVerificationCode();
-
-        const emailPromise = sendVerificationEmail(email);
-        await Promise.allSettled([emailPromise]);
-        return new NextResponse(JSON.stringify({
-            message: "Reset code sent successfully",
-            success: true,
-            code,
-        }), {
-            status: 200,
-        });
-
-    } catch (error) {
-        console.error('Error:', error);
-        return new NextResponse(JSON.stringify({ message: "Error finding user", success: false }), { status: 500 });
+  try {
+    const { email } = await request.json();
+    if (!email) {
+      throw new Error("Email not provided");
     }
+    await connectDB();
+    const userExist = await signupUser.findOne({ email });
+    if (!userExist) {
+      return new NextResponse(
+        JSON.stringify({
+          message: "User not exist",
+          success: false,
+        }),
+        {
+          status: 404,
+        }
+      );
+    }
+    if (userExist.password === null) {
+      return new NextResponse(
+        JSON.stringify({
+          message: "Can't reset password. This account is created with google.",
+          success: false,
+        })
+      );
+    }
+
+    // const verificationCode = await generateVerificationCode();
+
+    const emailPromise = sendVerificationEmail(email);
+    await Promise.allSettled([emailPromise]);
+    return new NextResponse(
+      JSON.stringify({
+        message: "Reset code sent successfully",
+        success: true,
+        code,
+      }),
+      {
+        status: 200,
+      }
+    );
+  } catch (error) {
+    console.error("Error:", error);
+    return new NextResponse(
+      JSON.stringify({ message: "Error finding user", success: false }),
+      { status: 500 }
+    );
+  }
 }

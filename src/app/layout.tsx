@@ -4,8 +4,8 @@ import "./globals.css";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
 config.autoAddCss = false;
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const inter = Inter({ subsets: ["latin"] });
 import { PostsProvider } from "@/app/context/postContext";
 import SessionProvider from "@/HOC/SessionProvider";
@@ -21,23 +21,23 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
     <html lang="en">
       <head>
-      <meta name="google-site-verification" content="JE47Asf3KQXewJRQ1KeZPIOF5j4IDDilDi62mFd0-pg" />
+        <meta
+          name="google-site-verification"
+          content="JE47Asf3KQXewJRQ1KeZPIOF5j4IDDilDi62mFd0-pg"
+        />
       </head>
       <body className={`body ${inter.className}`}>
-       <PostsProvider>
-        <SessionProvider>
-        {children}
-        </SessionProvider>
-        <ToastContainer 
-          position="top-center"
-          autoClose={3000}
-          theme="colored"
-          bodyClassName="toast-body"
-        />
+        <PostsProvider>
+          <SessionProvider>{children}</SessionProvider>
+          <ToastContainer
+            position="top-center"
+            autoClose={3000}
+            theme="colored"
+            bodyClassName="toast-body"
+          />
         </PostsProvider>
       </body>
     </html>

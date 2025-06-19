@@ -1,13 +1,13 @@
-import { getCookie } from 'cookies-next';
+import { getCookie } from "cookies-next";
 
 export default async function getProducts() {
-  const token = getCookie('token2');
+  const token = getCookie("token2");
   const headers = new Headers();
-  headers.append('Authorization', `Bearer ${token}`);
+  headers.append("Authorization", `Bearer ${token}`);
 
   try {
-    const response = await fetch('/api/users/blog', {
-      method: 'GET',
+    const response = await fetch("/api/users/blog", {
+      method: "GET",
       headers: headers,
     });
 
@@ -25,4 +25,3 @@ export default async function getProducts() {
     throw new Error(`Error fetching products: ${error.message}`);
   }
 }
-

@@ -1,18 +1,25 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import Link from "next/link";
-import Image from 'next/image';
+import Image from "next/image";
 import img from "@/app/Images/signup-image.jpg";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faEnvelope, faLock, faUnlockAlt, faImage } from '@fortawesome/free-solid-svg-icons';
-import { toast } from 'react-toastify';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faUser,
+  faEnvelope,
+  faLock,
+  faUnlockAlt,
+  faImage,
+  faArrowRight,
+} from "@fortawesome/free-solid-svg-icons";
+import { toast } from "react-toastify";
 import GoogleSignUpButton from "@/app/components/SignupButton";
 
 const Registration = () => {
   const [error, setError] = useState({});
   const [isChecked, setIsChecked] = useState(false);
   const [image, setImage] = useState("");
-  const [imageName, setImageName] = useState('Choose Profile Image');
+  const [imageName, setImageName] = useState("Choose Profile Image");
   const [isLoading, setIsLoading] = useState(false);
   const [value, setValue] = useState({
     name: "",
@@ -48,13 +55,13 @@ const Registration = () => {
     event.preventDefault();
     const formError = validate();
     setError(formError);
-    
+
     if (Object.keys(formError).length === 0 && isChecked) {
       const formData = new FormData();
-      formData.append('name', value.name);
-      formData.append('email', value.email);
-      formData.append('password', value.password);
-      image && formData.append('profileImage', image);
+      formData.append("name", value.name);
+      formData.append("email", value.email);
+      formData.append("password", value.password);
+      image && formData.append("profileImage", image);
 
       setIsLoading(true);
 
@@ -69,8 +76,8 @@ const Registration = () => {
           if (res_data.success) {
             toast.success(res_data.message);
             setTimeout(() => {
-              window.location.href = '/signup/verify';
-            }, 1000); 
+              window.location.href = "/signup/verify";
+            }, 1000);
           } else {
             toast.error(res_data.message);
           }
@@ -113,20 +120,26 @@ const Registration = () => {
   };
 
   return (
-    <div className='register-div'>
+    <div className="register-div">
       <div className="text-center form reg-form">
-      {isLoading && (
-  <div className="absolute top-8 left-1/2 transform -translate-x-1/2 bg-blue-500 py-2 px-4 rounded-md shadow-md z-50 flex items-center">
-    <div className="spinner spinner-2 mr-2"></div>
-    <span className="text-sm font-medium text-white">Processing...</span>
-  </div>
-)}
+        {isLoading && (
+          <div className="absolute top-8 left-1/2 transform -translate-x-1/2 bg-blue-500 py-2 px-4 rounded-md shadow-md z-50 flex items-center">
+            <div className="spinner spinner-2 mr-2"></div>
+            <span className="text-sm font-medium text-white">
+              Processing...
+            </span>
+          </div>
+        )}
 
-        <div className='grid grid-cols-1 md:grid-cols-2'>
-          <div className='col-span-1'>
-            <form className='my-auto p-0 text-start' method="POST" onSubmit={handleSubmit}>
-              <h4 className='reg-head'>Sign Up</h4>
-              <div className='relative'>
+        <div className="grid grid-cols-1 md:grid-cols-2">
+          <div className="col-span-1">
+            <form
+              className="my-auto p-0 text-start"
+              method="POST"
+              onSubmit={handleSubmit}
+            >
+              <h4 className="reg-head">Sign Up</h4>
+              <div className="relative">
                 <FontAwesomeIcon icon={faUser} className="reg-icon" />
                 <input
                   type="text"
@@ -134,13 +147,13 @@ const Registration = () => {
                   className="reg-input"
                   name="name"
                   value={value.name}
-                  autoComplete='off'
+                  autoComplete="off"
                   onChange={InputValue}
                 />
               </div>
               <div className="reg-error-msg">{error.name}</div>
 
-              <div className='relative'>
+              <div className="relative">
                 <FontAwesomeIcon icon={faEnvelope} className="reg-icon" />
                 <input
                   type="email"
@@ -148,13 +161,13 @@ const Registration = () => {
                   className="reg-input"
                   name="email"
                   value={value.email}
-                  autoComplete='off'
+                  autoComplete="off"
                   onChange={InputValue}
                 />
               </div>
               <div className="reg-error-msg">{error.email}</div>
 
-              <div className='relative'>
+              <div className="relative">
                 <FontAwesomeIcon icon={faLock} className="reg-icon" />
                 <input
                   type="password"
@@ -162,13 +175,13 @@ const Registration = () => {
                   className="reg-input"
                   name="password"
                   value={value.password}
-                  autoComplete='off'
+                  autoComplete="off"
                   onChange={InputValue}
                 />
               </div>
               <div className="reg-error-msg">{error.password}</div>
 
-              <div className='relative'>
+              <div className="relative">
                 <FontAwesomeIcon icon={faUnlockAlt} className="reg-icon" />
                 <input
                   type="password"
@@ -176,7 +189,7 @@ const Registration = () => {
                   className="reg-input"
                   name="cpassword"
                   value={value.cpassword}
-                  autoComplete='off'
+                  autoComplete="off"
                   onChange={InputValue}
                 />
               </div>
@@ -186,19 +199,20 @@ const Registration = () => {
                 <label htmlFor="blogImage1" className="file-input-label">
                   <span>
                     <FontAwesomeIcon icon={faImage} className="profile-icon" />
-                    <span className='profile'>{image ? imageName : "Choose Profile Image"}</span>
+                    <span className="profile">
+                      {image ? imageName : "Choose Profile Image"}
+                    </span>
                   </span>
                   <input
                     type="file"
                     name="image"
                     id="blogImage1"
                     accept="image/*"
-                    className='reg-input'
+                    className="reg-input"
                     onChange={handleImageChange}
                   />
                 </label>
               </div>
-              {/* <div className="reg-error-msg">{error.largeImage}</div> */}
 
               <label className="reg-checkbox">
                 <input
@@ -206,31 +220,38 @@ const Registration = () => {
                   checked={isChecked}
                   onChange={handleCheckboxChange}
                 />
-                <span className='ms-2'>
-                  I accept all terms & conditions
-                </span>
+                <span className="ms-2">I accept all terms & conditions</span>
                 <span className="checkmark"></span>
               </label>
 
-              <button type="submit" className="reg-btn">SIGN UP NOW</button>
-              </form>
-              <p className='text-center font-bold text-lg my-1 w-[85%]'>or</p>
-              <GoogleSignUpButton props="SIGN UP WITH GOOGLE"/>
-              <p className='mt-3 text-start'>
-                <span className='reg-bold'>
-                  Already have an account?
-                </span>
-                <Link href="/login" className='hover:underline redirect'> Login now</Link>
-              </p>
+              <button type="submit" className="reg-btn">
+                SIGN UP NOW
+              </button>
+            </form>
+            <p className="text-center font-bold text-lg my-1 w-[85%]">or</p>
+            <GoogleSignUpButton props="SIGN UP WITH GOOGLE" />
+            <p className="mt-3 text-start">
+              <span className="reg-bold">Already have an account?</span>
+              <Link href="/login" className="hover:underline redirect">
+                {" "}
+                Login now
+              </Link>
+            </p>
+            <p className="text-start mt-1">
+              <Link href="/" className="hover:underline redirect">
+                Explore Home
+                <FontAwesomeIcon icon={faArrowRight} className="ml-2 h-4" />
+              </Link>
+            </p>
           </div>
 
-          <div className='col-span-1 flex items-center'>
-            <Image src={img} alt='' className='reg-img' />
+          <div className="col-span-1 flex items-center">
+            <Image src={img} alt="" className="reg-img" />
           </div>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default Registration;
