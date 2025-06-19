@@ -148,7 +148,7 @@ function Page() {
         const responseData = await res.json();
 
         if (res.ok) {
-          toast.success("Blog created successfully");
+          toast.success("Blog published successfully");
           setTimeout(() => {
             window.location.href = "/articles";
           }, 1000);
